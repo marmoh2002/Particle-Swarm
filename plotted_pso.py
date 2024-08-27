@@ -40,18 +40,6 @@ def visualize_pso_3d(objective_func):
                 color='red', s=50, label='Initial positions')
     ax1.legend()
 
-    # Perform first iteration
-    pso._update_particles()
-    for particle in pso.particles:
-        particle.evaluate(pso.objective_func)
-
-    # Plot positions after first iteration
-    first_iteration_positions = np.array([p.position for p in pso.particles])
-    first_iteration_z = np.array([objective_func(p.position) for p in pso.particles])
-    ax1.scatter(first_iteration_positions[:, 0], first_iteration_positions[:, 1], first_iteration_z, 
-                color='blue', s=50, label='After first iteration')
-    ax1.legend()
-
     # Optimize
     best_position, best_fitness, _ = pso.optimize()
 
