@@ -31,17 +31,29 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 ## List of Benchmark Functions Supported
 1. ackley
 2. beale
-3. easom
-4. goldstein_price
-5. griewank
-6. levy
-7. michalewicz
-8. rastrigin
-9. rosenbrock
-10. schwefel
-11. sphere
-12. trid
-13. Input custom function
+3. booth
+4. bukin
+5. cross_in_tray
+6. easom
+7. eggholder
+8. goldstein_price
+9. griewank
+10. holder_table
+11. levi
+12. levy
+13. matyas
+14. mccormick
+15. michalewicz
+16. rastrigin
+17. rosenbrock
+18. schaffer_n2
+19. schaffer_n4
+20. schwefel
+21. sphere
+22. styblinski_tang
+23. three_hump_camel
+24. trid
+25. Input custom function
 
 
 ## Requirements

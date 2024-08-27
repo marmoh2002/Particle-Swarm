@@ -1,4 +1,5 @@
 import numpy as np
+
 def rastrigin(x):
     """Rastrigin function"""
     return 10 * len(x) + sum(xi**2 - 10 * np.cos(2 * np.pi * xi) for xi in x)
@@ -10,6 +11,7 @@ def sphere(x):
 def rosenbrock(x):
     """Rosenbrock function"""
     return sum(100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2 for i in range(len(x) - 1))
+
 def griewank(x):
     """Griewank function"""
     sum_part = np.sum(x**2) / 4000
@@ -22,6 +24,7 @@ def trid(x):
     sum_part = np.sum((x - 1)**2)
     product_part = np.sum(x[1:] * x[:-1])
     return sum_part - product_part
+
 def ackley(x):
     """Ackley function"""
     n = len(x)
@@ -30,10 +33,12 @@ def ackley(x):
     term1 = -20 * np.exp(-0.2 * np.sqrt(sum1 / n))
     term2 = -np.exp(sum2 / n)
     return term1 + term2 + 20 + np.e
+
 def schwefel(x):
     """Schwefel function"""
     n = len(x)
     return 418.9829 * n - np.sum(x * np.sin(np.sqrt(np.abs(x))))
+
 def levy(x):
     """Levy function"""
     w = 1 + (x - 1) / 4
@@ -41,12 +46,14 @@ def levy(x):
     term2 = np.sum((w[:-1] - 1)**2 * (1 + 10 * np.sin(np.pi * w[:-1] + 1)**2))
     term3 = (w[-1] - 1)**2 * (1 + np.sin(2 * np.pi * w[-1])**2)
     return term1 + term2 + term3
+
 def michalewicz(x):
     """Michalewicz function"""
     m = 10  # steepness factor
     d = len(x)
     i = np.arange(1, d + 1)
     return -np.sum(np.sin(x) * np.sin(i * x**2 / np.pi)**(2 * m))
+
 def easom(x):
     """Easom function"""
     x1, x2 = x
@@ -67,3 +74,64 @@ def goldstein_price(x):
     term2 = (30 + (2*x1 - 3*x2)**2 * (18 - 32*x1 + 12*x1**2 + 48*x2 - 36*x1*x2 + 27*x2**2))
     return term1 * term2
 
+def booth(x):
+    """Booth function"""
+    x1, x2 = x
+    return (x1 + 2*x2 - 7)**2 + (2*x1 + x2 - 5)**2
+
+def bukin(x):
+    """Bukin function N.6"""
+    x1, x2 = x
+    return 100 * np.sqrt(np.abs(x2 - 0.01*x1**2)) + 0.01*np.abs(x1 + 10)
+
+def matyas(x):
+    """Matyas function"""
+    x1, x2 = x
+    return 0.26 * (x1**2 + x2**2) - 0.48 * x1 * x2
+
+def levi(x):
+    """Levi function N.13"""
+    x1, x2 = x
+    term1 = np.sin(3 * np.pi * x1)**2
+    term2 = (x1 - 1)**2 * (1 + np.sin(3 * np.pi * x2)**2)
+    term3 = (x2 - 1)**2 * (1 + np.sin(2 * np.pi * x2)**2)
+    return term1 + term2 + term3
+
+def three_hump_camel(x):
+    """Three-hump camel function"""
+    x1, x2 = x
+    return 2*x1**2 - 1.05*x1**4 + x1**6/6 + x1*x2 + x2**2
+
+def cross_in_tray(x):
+    """Cross-in-tray function"""
+    x1, x2 = x
+    return -0.0001 * (np.abs(np.sin(x1) * np.sin(x2) * np.exp(np.abs(100 - np.sqrt(x1**2 + x2**2)/np.pi))) + 1)**0.1
+
+def eggholder(x):
+    """Eggholder function"""
+    x1, x2 = x
+    return -(x2 + 47) * np.sin(np.sqrt(np.abs(x2 + x1/2 + 47))) - x1 * np.sin(np.sqrt(np.abs(x1 - (x2 + 47))))
+
+def holder_table(x):
+    """Holder table function"""
+    x1, x2 = x
+    return -np.abs(np.sin(x1) * np.cos(x2) * np.exp(np.abs(1 - np.sqrt(x1**2 + x2**2)/np.pi)))
+
+def mccormick(x):
+    """McCormick function"""
+    x1, x2 = x
+    return np.sin(x1 + x2) + (x1 - x2)**2 - 1.5*x1 + 2.5*x2 + 1
+
+def schaffer_n2(x):
+    """Schaffer N.2 function"""
+    x1, x2 = x
+    return 0.5 + (np.sin(x1**2 - x2**2)**2 - 0.5) / (1 + 0.001*(x1**2 + x2**2))**2
+
+def schaffer_n4(x):
+    """Schaffer N.4 function"""
+    x1, x2 = x
+    return 0.5 + (np.cos(np.sin(np.abs(x1**2 - x2**2)))**2 - 0.5) / (1 + 0.001*(x1**2 + x2**2))**2
+
+def styblinski_tang(x):
+    """Styblinski-Tang function"""
+    return 0.5 * np.sum(x**4 - 16*x**2 + 5*x)
