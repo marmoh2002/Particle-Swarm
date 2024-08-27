@@ -1,6 +1,6 @@
 import numpy as np
 from psalg import ParticleSwarm 
-from funcs import sphere, rastrigin
+import funcs as funcs
 
 def run_pso_multiple_times(num_runs, num_dimensions, lb, ub, function):
     optimal_values = []
@@ -17,6 +17,15 @@ def run_pso_multiple_times(num_runs, num_dimensions, lb, ub, function):
 
     return mean_optimal, std_optimal
 
+def run_all_functions(all_functions, num_runs, num_dimensions, lb, ub):
+    results = {}
+    for func_name in all_functions:
+        func = getattr(funcs, func_name)
+        print(f"\nRunning PSO on {func_name} function...")
+        mean, std = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func)
+        results[func_name] = {"mean": mean, "std": std}
+    return results
+
 if __name__ == "__main__":
     # Default values
     default_num_runs = 100
@@ -28,17 +37,63 @@ if __name__ == "__main__":
     lb = [-10] * num_dimensions  # Lower bound
     ub = [10] * num_dimensions   # Upper bound
 
-    print(f"Running PSO on Sphere function {num_runs} times...")
+    print(f"Number of runs: {num_runs}")
     print(f"Number of dimensions: {num_dimensions}")
     print(f"Bounds: [{lb[0]}, {ub[0]}]")
 
-    mean_sphere, std_sphere = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, sphere)
-    mean_rastrigin, std_rastrigin = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, rastrigin)
+    # Get all functions from funcs module
+    all_functions = [func for func in dir(funcs) if callable(getattr(funcs, func)) and not func.startswith("__")]
 
-    print(f"\nResults after {num_runs} runs of sphere function:")
-    print(f"Mean optimal value: {mean_sphere}")
-    print(f"Standard deviation of optimal values: {std_sphere}")
+    while True:
+        print("\nAvailable options:")
+        print("1. Run PSO on a single function")
+        print("2. Run PSO on all functions")
+        print("0. Quit")
 
-    print(f"\nResults after {num_runs} runs of rastrigin function:")
-    print(f"Mean optimal value: {mean_rastrigin}")
-    print(f"Standard deviation of optimal values: {std_rastrigin}")
+        choice = input("\nEnter your choice: ")
+        
+        if choice == '0':
+            print("Exiting program.")
+            break
+        
+        elif choice == '1':
+            while True:
+                print("\nAvailable benchmark functions:")
+                for i, func_name in enumerate(all_functions, 1):
+                    print(f"{i}. {func_name}")
+                print("0. Back to main menu")
+
+                func_choice = input("\nChoose a function to run PSO on (enter number) or enter 0 to go back to main menu: ")
+                
+                if func_choice == '0':
+                    break
+                
+                try:
+                    func_index = int(func_choice) - 1
+                    if 0 <= func_index < len(all_functions):
+                        func_name = all_functions[func_index]
+                        func = getattr(funcs, func_name)
+                        
+                        print(f"\nRunning PSO on {func_name} function...")
+                        mean, std = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func)
+                        
+                        print("\nResults:")
+                        print(f"  Mean optimal value: {mean}")
+                        print(f"  Standard deviation of optimal values: {std}")
+                    else:
+                        print("Invalid choice. Please enter a number from the list.")
+                except ValueError:
+                    print("Invalid input. Please enter a number.")
+        
+        elif choice == '2':
+            print("\nRunning PSO on all functions...")
+            results = run_all_functions(all_functions, num_runs, num_dimensions, lb, ub)
+            
+            print("\nFinal Results:")
+            for func_name, result in results.items():
+                print(f"{func_name}:")
+                print(f"  Mean optimal value: {result['mean']}")
+                print(f"  Standard deviation of optimal values: {result['std']}")
+        
+        else:
+            print("Invalid choice. Please enter 0, 1, or 2.")
