@@ -3,7 +3,16 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from psalg import ParticleSwarm
 import funcs
-def plot_3d_function(ax, objective_func, lb, ub):
+
+def parse_user_function(func_str):
+    """Parse user input string into a callable function."""
+    try:
+        return lambda x: eval(func_str, {"x": x, "np": np})
+    except:
+        print("Invalid function. Please try again.")
+        return None
+
+def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
     x = np.linspace(lb[0], ub[0], 100)
     y = np.linspace(lb[1], ub[1], 100)
     X, Y = np.meshgrid(x, y)
@@ -16,9 +25,13 @@ def plot_3d_function(ax, objective_func, lb, ub):
     ax.set_xlabel('X')
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
-    ax.set_title(f'3D {objective_func.__name__.capitalize()} Function')
+    if is_user_defined:
+        ax.set_title("User-defined Function")
+    else:
+        ax.set_title(f'3D {objective_func.__name__.capitalize()} Function')
+        
 
-def visualize_pso_3d(objective_func):
+def visualize_pso_3d(objective_func, is_user_defined=False):
     num_dimensions = 2
     # Default bounds
     default_lb = [-5.12, -5.12]
@@ -38,8 +51,8 @@ def visualize_pso_3d(objective_func):
     ax1 = fig.add_subplot(121, projection='3d')
     ax2 = fig.add_subplot(122, projection='3d')
 
-    plot_3d_function(ax1, objective_func, lb, ub)
-    plot_3d_function(ax2, objective_func, lb, ub)
+    plot_3d_function(ax1, objective_func, lb, ub, is_user_defined)
+    plot_3d_function(ax2, objective_func, lb, ub, is_user_defined)
 
     default_num_particles = 100  # Default number of particles
     # Ask user for number of particles
@@ -81,6 +94,7 @@ if __name__ == "__main__":
     print("Available functions:")
     for i, func in enumerate(available_functions, 1):
         print(f"{i}. {func}")
+    print(f"{len(available_functions) + 1}. Input custom function")
     
     while True:
         choice = input("Choose a function to visualize (enter number or '0' to exit): ")
@@ -96,6 +110,15 @@ if __name__ == "__main__":
                 objective_func = getattr(funcs, func_name)
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
+            elif index == len(available_functions):
+                print("Enter your custom function using 'x' as the input variable.")
+                print("Example: np.sin(x[0]) + np.cos(x[1])")
+                user_func_str = input("Function: ")
+                user_func = parse_user_function(user_func_str)
+                if user_func:
+                    print("Visualizing user-defined function...")
+                    visualize_pso_3d(user_func, is_user_defined=True)
+            
             else:
                 print("Invalid input. Please choose a number from the list.")
         except ValueError:
