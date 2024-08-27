@@ -28,6 +28,21 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 - revise `psalg.py` functionality.
 
+## List of Benchmark Functions Supported
+1. ackley
+2. beale
+3. easom
+4. goldstein_price
+5. griewank
+6. levy
+7. michalewicz
+8. rastrigin
+9. rosenbrock
+10. schwefel
+11. sphere
+12. trid
+
+
 ## Requirements
 
 - NumPy
