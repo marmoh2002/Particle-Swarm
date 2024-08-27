@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from psalg import ParticleSwarm
 import funcs
-
 def plot_3d_function(ax, objective_func, lb, ub):
     x = np.linspace(lb[0], ub[0], 100)
     y = np.linspace(lb[1], ub[1], 100)
@@ -42,8 +41,16 @@ def visualize_pso_3d(objective_func):
     plot_3d_function(ax1, objective_func, lb, ub)
     plot_3d_function(ax2, objective_func, lb, ub)
 
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions)
+    default_num_particles = 100  # Default number of particles
+    # Ask user for number of particles
+    num_particles = input(f"Enter number of particles (default is {default_num_particles}): ")
+    num_particles = int(num_particles) if num_particles.isdigit() else default_num_particles
 
+    default_max_iterations = 500
+    max_iterations = input(f"Enter maximum number of iterations performed by PSO (default is {default_max_iterations}): ")
+    max_iterations = int(max_iterations) if max_iterations.isdigit() else default_max_iterations
+
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations})
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
     initial_z = np.array([objective_func(p.position) for p in pso.particles])
@@ -61,11 +68,12 @@ def visualize_pso_3d(objective_func):
                 color='green', s=50, label='Final positions')
     best_z = objective_func(best_position)
     ax2.scatter(best_position[0], best_position[1], best_z, 
-                color='red', s=100, label='Best position')
+                color='red', s=50, label='Best position')
     ax2.legend()
 
     plt.tight_layout()
     plt.show()
+    
 
 if __name__ == "__main__":
     available_functions = [func for func in dir(funcs) if callable(getattr(funcs, func)) and not func.startswith("__")]
@@ -78,6 +86,7 @@ if __name__ == "__main__":
         choice = input("Choose a function to visualize (enter number or '0' to exit): ")
         
         if choice == '0':
+            print("Exiting...")
             break
         
         try:
@@ -88,6 +97,8 @@ if __name__ == "__main__":
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
             else:
-                print("Invalid number. Please choose a number from the list.")
+                print("Invalid input. Please choose a number from the list.")
         except ValueError:
             print("Invalid input. Please enter a number.")
+
+

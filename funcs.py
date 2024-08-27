@@ -47,3 +47,23 @@ def michalewicz(x):
     d = len(x)
     i = np.arange(1, d + 1)
     return -np.sum(np.sin(x) * np.sin(i * x**2 / np.pi)**(2 * m))
+def easom(x):
+    """Easom function"""
+    x1, x2 = x
+    return -np.cos(x1) * np.cos(x2) * np.exp(-((x1 - np.pi)**2 + (x2 - np.pi)**2))
+
+def beale(x):
+    """Beale function"""
+    x1, x2 = x
+    term1 = (1.5 - x1 + x1*x2)**2
+    term2 = (2.25 - x1 + x1*x2**2)**2
+    term3 = (2.625 - x1 + x1*x2**3)**2
+    return term1 + term2 + term3
+
+def goldstein_price(x):
+    """Goldstein-Price function"""
+    x1, x2 = x
+    term1 = (1 + (x1 + x2 + 1)**2 * (19 - 14*x1 + 3*x1**2 - 14*x2 + 6*x1*x2 + 3*x2**2))
+    term2 = (30 + (2*x1 - 3*x2)**2 * (18 - 32*x1 + 12*x1**2 + 48*x2 - 36*x1*x2 + 27*x2**2))
+    return term1 * term2
+
