@@ -4,13 +4,13 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 ## Files
 
-1. `psalg.py`: Core implementation of the PSO algorithm. Currently being updated to implement group PSO instead of individual PSO.
+1. `psalg.py`: Core implementation of the PSO algorithm.
 
-2. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results. Currently set up to automatically evaluate the sphere and Rastrigin functions.
+3. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
 
-3. `funcs.py`: Contains benchmark functions used for testing the PSO algorithm.
+4. `funcs.py`: Contains 12 benchmark functions used for testing the PSO algorithm.
 
-4. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
+5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
 
 ## Usage
 
@@ -26,8 +26,23 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 ## TODO
 
-- Update `psalg.py` to implement group PSO.
-- Fine-tune `check_implementation.py` for more comprehensive evaluation.
+- revise `psalg.py` functionality.
+
+## List of Benchmark Functions Supported
+1. ackley
+2. beale
+3. easom
+4. goldstein_price
+5. griewank
+6. levy
+7. michalewicz
+8. rastrigin
+9. rosenbrock
+10. schwefel
+11. sphere
+12. trid
+13. Input custom function
+
 
 ## Requirements
 
