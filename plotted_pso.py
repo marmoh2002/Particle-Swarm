@@ -21,10 +21,21 @@ def plot_3d_function(ax, objective_func, lb, ub):
 
 def visualize_pso_3d(objective_func):
     num_dimensions = 2
-    lb = [-5.12, -5.12]
-    ub = [5.12, 5.12]
+    # Default bounds
+    default_lb = [-5.12, -5.12]
+    default_ub = [5.12, 5.12]
 
-    fig = plt.figure(figsize=(15, 7))
+    # Ask user if they want to specify custom bounds
+    use_custom_bounds = input("Do you want to specify custom bounds? (y/n): ").lower() == 'y'
+
+    if use_custom_bounds:
+        lb = [float(x) for x in input("Enter lower bounds (comma-separated): ").split(',')]
+        ub = [float(x) for x in input("Enter upper bounds (comma-separated): ").split(',')]
+    else:
+        lb = default_lb
+        ub = default_ub
+
+    fig = plt.figure(figsize=(20, 9))
     ax1 = fig.add_subplot(121, projection='3d')
     ax2 = fig.add_subplot(122, projection='3d')
 
@@ -64,9 +75,9 @@ if __name__ == "__main__":
         print(f"{i}. {func}")
     
     while True:
-        choice = input("Choose a function to visualize (enter number or 'quit' to exit): ").lower()
+        choice = input("Choose a function to visualize (enter number or '0' to exit): ")
         
-        if choice == 'quit':
+        if choice == '0':
             break
         
         try:
@@ -79,4 +90,4 @@ if __name__ == "__main__":
             else:
                 print("Invalid number. Please choose a number from the list.")
         except ValueError:
-            print("Invalid input. Please enter a number or 'quit'.")
+            print("Invalid input. Please enter a number.")
