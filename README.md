@@ -41,7 +41,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 10. schwefel
 11. sphere
 12. trid
-13. user-defined function
+13. Input custom function
 
 
 ## Requirements
