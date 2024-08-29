@@ -1,4 +1,5 @@
 import numpy as np
+import inspect
 
 def rastrigin(x):
     """Rastrigin function"""
@@ -135,3 +136,63 @@ def schaffer_n4(x):
 def styblinski_tang(x):
     """Styblinski-Tang function"""
     return 0.5 * np.sum(x**4 - 16*x**2 + 5*x)
+
+def himmelblau(x):
+    """Himmelblau's function"""
+    x1, x2 = x
+    return (x1**2 + x2 - 11)**2 + (x1 + x2**2 - 7)**2
+
+def easom(x):
+    """Easom function"""
+    x1, x2 = x
+    return -np.cos(x1) * np.cos(x2) * np.exp(-((x1 - np.pi)**2 + (x2 - np.pi)**2))
+
+def booth(x):
+    """Booth function"""
+    x1, x2 = x
+    return (x1 + 2*x2 - 7)**2 + (2*x1 + x2 - 5)**2
+
+def bukin_n6(x):
+    """Bukin function N.6"""
+    x1, x2 = x
+    return 100 * np.sqrt(np.abs(x2 - 0.01*x1**2)) + 0.01*np.abs(x1 + 10)
+
+def drop_wave(x):
+    """Drop-Wave function"""
+    x1, x2 = x
+    frac1 = 1 + np.cos(12 * np.sqrt(x1**2 + x2**2))
+    frac2 = 0.5 * (x1**2 + x2**2) + 2
+    return -frac1 / frac2
+def cross_in_tray(x):
+    """Cross-in-Tray function"""
+    x1, x2 = x
+    return -0.0001 * (np.abs(np.sin(x1) * np.sin(x2) * np.exp(np.abs(100 - np.sqrt(x1**2 + x2**2)/np.pi))) + 1)**0.1
+
+def langermann(x):
+    """Langermann function"""
+    x1, x2 = x
+    A = np.array([[3, 5], [5, 2], [2, 1], [1, 4], [7, 9]])
+    c = np.array([1, 2, 5, 2, 3])
+    m = 5
+    return np.sum(c * np.exp(-(1/np.pi) * ((x1 - A[:, 0])**2 + (x2 - A[:, 1])**2)) * np.cos(np.pi * ((x1 - A[:, 0])**2 + (x2 - A[:, 1])**2)))
+
+def shubert(x):
+    """Shubert function"""
+    x1, x2 = x
+    sum1 = sum(i * np.cos((i+1)*x1 + i) for i in range(1, 6))
+    sum2 = sum(i * np.cos((i+1)*x2 + i) for i in range(1, 6))
+    return sum1 * sum2
+
+def functions_menu():
+    
+    """Returns an enumeration of all function names in this file, excluding itself"""
+    
+    available_functions = [name for name, obj in globals().items()
+            if inspect.isfunction(obj) and obj.__module__ == __name__ and name != 'functions_menu']
+    
+    print("Available functions:")
+    for i, func in enumerate(available_functions, 1):
+        print(f"{i}. {func}")
+    print(f"{len(available_functions) + 1}. Input custom function")
+    return available_functions
+    

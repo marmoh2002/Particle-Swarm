@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import importlib
 from psalg import ParticleSwarm
-import funcs
 
 def parse_user_function(func_str):
     """Parse user input string into a callable function."""
@@ -91,16 +91,40 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     plt.tight_layout()
     plt.show()
     
-
-if __name__ == "__main__":
-    available_functions = [func for func in dir(funcs) if callable(getattr(funcs, func)) and not func.startswith("__")]
+def enumerate_functions(filename):
+    """
+    Enumerate all functions in the specified module.
     
+    Args:
+    filename (str): The name of the local Python file to import (without .py extension).
+    
+    Returns:
+    list: A list of function names available for optimization.
+    """
+       
+    # Dynamically import the module
+    module = importlib.import_module(filename)
+    
+    # Get all functions from the imported module
+    available_functions = [func for func in dir(module) if callable(getattr(module, func)) and not func.startswith("__")]
+
     print("Available functions:")
     for i, func in enumerate(available_functions, 1):
         print(f"{i}. {func}")
     print(f"{len(available_functions) + 1}. Input custom function")
+    return available_functions
+
+# Update the available_functions in the main block
+
+if __name__ == "__main__":
+    available_functions = enumerate_functions("funcs")
     
     while True:
+        print("\nAvailable functions:")
+        for i, func in enumerate(available_functions, 1):
+            print(f"{i}. {func}")
+        print(f"{len(available_functions) + 1}. Input custom function")
+        
         choice = input("Choose a function to visualize (enter number or '0' to exit): ")
         
         if choice == '0':
@@ -111,7 +135,7 @@ if __name__ == "__main__":
             index = int(choice) - 1
             if 0 <= index < len(available_functions):
                 func_name = available_functions[index]
-                objective_func = getattr(funcs, func_name)
+                objective_func = getattr(importlib.import_module("funcs"), func_name)
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
             elif index == len(available_functions):
@@ -122,10 +146,15 @@ if __name__ == "__main__":
                 if user_func:
                     print("Visualizing user-defined function...")
                     visualize_pso_3d(user_func, is_user_defined=True)
-            
             else:
                 print("Invalid input. Please choose a number from the list.")
+                continue
         except ValueError:
             print("Invalid input. Please enter a number.")
-
-
+            continue
+        
+        # Prompt user after visualization
+        continue_choice = input("\nWould you like to visualize another function? (y/n): ").lower()
+        if continue_choice != 'y':
+            print("Exiting...")
+            break

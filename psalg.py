@@ -85,6 +85,7 @@ class ParticleSwarm:
         end_time = time.time()
         elapsed_time = end_time - start_time
         print(f"Optimization completed. Best fitness: {self.global_best_fitness}")
+        print(f"Position of best fitness: {self.global_best_position}")
         print(f"Time elapsed: {elapsed_time:.2f} seconds")
         return self.global_best_position, self.global_best_fitness, elapsed_time
 
@@ -104,5 +105,3 @@ class ParticleSwarm:
         tolerance = self.options.get('Tolerance', 1e-6)
         converged = np.all(position_range < tolerance) and fitness_range < tolerance
         return converged
-
-# The main block remains unchanged
