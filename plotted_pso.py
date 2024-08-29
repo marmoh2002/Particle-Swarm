@@ -63,12 +63,16 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     max_iterations = input(f"Enter maximum number of iterations performed by PSO (default is {default_max_iterations}): ")
     max_iterations = int(max_iterations) if max_iterations.isdigit() else default_max_iterations
 
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations})
+
+    minimize = input("Minimize the function? (y/n): ").lower() == 'y'
+    
+
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize=minimize)
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
     initial_z = np.array([objective_func(p.position) for p in pso.particles])
     ax1.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, 
-                color='red', s=50, label='Initial positions')
+                color='magenta', s=35, label='Initial positions')
     ax1.legend()
 
     # Optimize
@@ -78,10 +82,10 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     final_positions = np.array([p.position for p in pso.particles])
     final_z = np.array([objective_func(p.position) for p in pso.particles])
     ax2.scatter(final_positions[:, 0], final_positions[:, 1], final_z, 
-                color='green', s=50, label='Final positions')
+                color='orange', s=35, label='Final positions')
     best_z = objective_func(best_position)
     ax2.scatter(best_position[0], best_position[1], best_z, 
-                color='red', s=50, label='Best position')
+                color='blue', s=100, label='Best position')
     ax2.legend()
 
     plt.tight_layout()
