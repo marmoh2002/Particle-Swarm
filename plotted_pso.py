@@ -4,14 +4,6 @@ from mpl_toolkits.mplot3d import Axes3D
 import importlib
 from psalg import ParticleSwarm
 
-def parse_user_function(func_str):
-    """Parse user input string into a callable function."""
-    try:
-        return lambda x: eval(func_str, {"x": x, "np": np})
-    except:
-        print("Invalid function. Please try again.")
-        return None
-
 def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
     x = np.linspace(lb[0], ub[0], 100)
     y = np.linspace(lb[1], ub[1], 100)
@@ -54,8 +46,7 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     plot_3d_function(ax1, objective_func, lb, ub, is_user_defined)
     plot_3d_function(ax2, objective_func, lb, ub, is_user_defined)
 
-    default_num_particles = 100  # Default number of particles
-    # Ask user for number of particles
+    default_num_particles = 100  
     num_particles = input(f"Enter number of particles (default is {default_num_particles}): ")
     num_particles = int(num_particles) if num_particles.isdigit() else default_num_particles
 
@@ -70,17 +61,17 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize= minimize)
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
-    initial_z = np.array([objective_func(p.position) for p in pso.particles])
+    initial_z = np.array([p.evaluate(objective_func, minimize) for p in pso.particles])
     ax1.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, 
                 color='magenta', s=35, label='Initial positions')
     ax1.legend()
 
     # Optimize
-    best_position, best_fitness, _ = pso.optimize()
+    best_position, best_fitness, _ , _ = pso.optimize(verbose=True)
 
     # Plot final positions
     final_positions = np.array([p.position for p in pso.particles])
-    final_z = np.array([objective_func(p.position) for p in pso.particles])
+    final_z = np.array([p.evaluate(objective_func, minimize) for p in pso.particles])
     ax2.scatter(final_positions[:, 0], final_positions[:, 1], final_z, 
                 color='orange', s=35, label='Final positions')
     best_z = objective_func(best_position)
@@ -106,7 +97,7 @@ def enumerate_functions(filename):
     module = importlib.import_module(filename)
     
     # Get all functions from the imported module
-    available_functions = [func for func in dir(module) if callable(getattr(module, func)) and not func.startswith("__")]
+    available_functions = [func for func in dir(module) if callable(getattr(module, func)) and not func.startswith("parse_user_function")]
 
     print("Available functions:")
     for i, func in enumerate(available_functions, 1):
@@ -135,6 +126,8 @@ if __name__ == "__main__":
             index = int(choice) - 1
             if 0 <= index < len(available_functions):
                 func_name = available_functions[index]
+                # This line dynamically imports the chosen function from the 'funcs' module
+                # It first imports the 'funcs' module, then uses getattr to get the function with the name stored in func_name from that module
                 objective_func = getattr(importlib.import_module("funcs"), func_name)
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
@@ -142,7 +135,8 @@ if __name__ == "__main__":
                 print("Enter your custom function using 'x' as the input variable.")
                 print("Example: np.sin(x[0]) + np.cos(x[1])")
                 user_func_str = input("Function: ")
-                user_func = parse_user_function(user_func_str)
+                user_function = getattr(importlib.import_module("funcs"), "parse_user_function")
+                user_func = user_function(user_func_str)
                 if user_func:
                     print("Visualizing user-defined function...")
                     visualize_pso_3d(user_func, is_user_defined=True)

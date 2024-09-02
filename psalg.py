@@ -55,7 +55,6 @@ class ParticleSwarm:
         
         self.options = options if options is not None else {}
         self.swarm_size = self.options.get('SwarmSize', 50)
-        print("swarm size: ", self.swarm_size)
         self.max_iterations = self.options.get('MaxIterations', 1000)
         self.w_start = self.options.get('InertiaStartWeight', 0.9)
         self.w_end = self.options.get('InertiaEndWeight', 0.4)
@@ -66,8 +65,9 @@ class ParticleSwarm:
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
         self.vmax = 0.2 * (self.ub - self.lb)
 
-    def optimize(self):
-        print(f"Starting PSO optimization... ({'minimization' if self.minimize else 'maximization'})")
+    def optimize(self, verbose=True):
+        if verbose:
+            print(f"Starting PSO optimization... ({'minimization' if self.minimize else 'maximization'})")
         start_time = time.time()
         iterations_performed = 0
         for iteration in range(self.max_iterations):
@@ -84,16 +84,18 @@ class ParticleSwarm:
                         self.global_best_position = particle.position.copy()
 
             if self._check_convergence():
-                print(f"Converged after {iterations_performed} iterations.")
+                if verbose:
+                    print(f"Converged after {iterations_performed} iterations.")
                 break
             self._update_particles(iteration)
 
         end_time = time.time()
         elapsed_time = end_time - start_time
-        print(f"Optimization completed. Best fitness: {self.global_best_fitness}")
-        print(f"Position of best fitness: {self.global_best_position}")
-        print(f"Time elapsed: {elapsed_time:.2f} seconds")
-        print(f"Total iterations performed: {iterations_performed}")
+        if verbose:
+            print(f"Optimization completed. Best fitness: {self.global_best_fitness}")
+            print(f"Position of best fitness: {self.global_best_position.ravel()}")
+            print(f"Time elapsed: {elapsed_time:.2f} seconds")
+            print(f"Total iterations performed: {iterations_performed}")
         return self.global_best_position, self.global_best_fitness, elapsed_time, iterations_performed
 
     def _update_particles(self, iteration):
@@ -112,3 +114,5 @@ class ParticleSwarm:
         tolerance = self.options.get('Tolerance', 1e-6)
         converged = np.all(position_range < tolerance) and fitness_range < tolerance
         return converged
+
+            
