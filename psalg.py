@@ -3,43 +3,47 @@ import time
 import funcs as funcs
 
 class Particle:
-    def __init__(self, lb: np.ndarray, ub: np.ndarray, num_dimensions: int):
+    def __init__(self, lb: np.ndarray, ub: np.ndarray, num_dimensions: int, minimize: bool):
         self.position = np.random.uniform(lb, ub, num_dimensions)
+        self.old_position = self.position.copy()
         self.velocity = np.random.uniform(-1, 1, num_dimensions)
         self.best_position = self.position.copy()
-        self.best_fitness = float('inf')
+        self.best_fitness = float('inf') if minimize else float('-inf')
 
-    def update_velocity(self, global_best: np.ndarray, w: float, c1: float, c2: float, vmax: np.ndarray, a: float):
+    def update_velocity(self, global_best: np.ndarray, w: float, c1: float, c2: float, vmax: np.ndarray):
         r1, r2 = np.random.rand(2)
-        if np.random.rand() < a:
-            self.velocity = self.velocity
-        else:
-            self.velocity = (w * self.velocity +
-                             c1 * r1 * (self.best_position - self.position) +
-                             c2 * r2 * (global_best - self.position))
+        cognitive_component = c1 * r1 * (self.best_position - self.position)
+        social_component = c2 * r2 * (global_best - self.position)
+        self.velocity = w * self.velocity + cognitive_component + social_component
         self.velocity = np.clip(self.velocity, -vmax, vmax)
 
-    def update_position(self, global_best: np.ndarray, w: float, lb: np.ndarray, ub: np.ndarray):
-        r3, r4 = np.random.rand(2)
-        if np.random.rand() < 0.49:
-            self.position = global_best + w * r3 * np.abs(global_best)
-        else:
-            self.position = global_best - w * r4 * np.abs(global_best)
+    def update_position(self, lb: np.ndarray, ub: np.ndarray):
+        self.old_position = self.position.copy()
+        self.position += self.velocity
+        self.position = np.clip(self.position, lb, ub)
+        # Add a small perturbation to avoid particles getting stuck
+        self.position += np.random.normal(0, 1e-8, self.position.shape)
         self.position = np.clip(self.position, lb, ub)
 
-    def evaluate(self, objective_func):
+    def evaluate(self, objective_func, minimize=True):
         fitness = objective_func(self.position)
-        if fitness < self.best_fitness:
-            self.best_fitness = fitness
-            self.best_position = self.position.copy()
+        if minimize:
+            if fitness < self.best_fitness:
+                self.best_fitness = fitness
+                self.best_position = self.position.copy()
+        else:
+            if fitness > self.best_fitness:
+                self.best_fitness = fitness
+                self.best_position = self.position.copy()
         return fitness
 
 class ParticleSwarm:
-    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None):
+    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True):
         self.objective_func = objective_func
         self.lb = np.array(lb)
         self.ub = np.array(ub)
         self.num_dimensions = num_dimensions
+        self.minimize = minimize
         
         if len(self.lb) == 1:
             self.lb = np.repeat(self.lb, self.num_dimensions)
@@ -49,96 +53,62 @@ class ParticleSwarm:
         assert len(self.lb) == self.num_dimensions, "Lower bounds must match the number of dimensions"
         assert len(self.ub) == self.num_dimensions, "Upper bounds must match the number of dimensions"
         
-        # Initialize options with provided dictionary or an empty dict if None
-        # This allows for default values to be set for unspecified options
         self.options = options if options is not None else {}
-        # Set the swarm size from the options dictionary, defaulting to 50 if not specified
         self.swarm_size = self.options.get('SwarmSize', 50)
         print("swarm size: ", self.swarm_size)
         self.max_iterations = self.options.get('MaxIterations', 1000)
-        self.inertia_constant = self.options.get('InertiaConstant', 0.5)
-        self.velocity_pausing_coefficient = self.options.get('VelocityPausingCoefficient', 0.5)        
-        self.particles = [Particle(self.lb, self.ub, self.num_dimensions) for _ in range(self.swarm_size)]
+        self.w_start = self.options.get('InertiaStartWeight', 0.9)
+        self.w_end = self.options.get('InertiaEndWeight', 0.4)
+        self.c1 = self.options.get('SelfAdjustmentWeight', 2.0)
+        self.c2 = self.options.get('SocialAdjustmentWeight', 2.0)
+        self.particles = [Particle(self.lb, self.ub, self.num_dimensions, self.minimize) for _ in range(self.swarm_size)]
         self.global_best_position = np.random.uniform(self.lb, self.ub, self.num_dimensions)
-        self.global_best_fitness = float('inf')
-        # This sets the maximum velocity for each dimension as 20% of the range between upper and lower bounds
+        self.global_best_fitness = float('inf') if self.minimize else float('-inf')
         self.vmax = 0.2 * (self.ub - self.lb)
 
     def optimize(self):
-        print("Starting PSO optimization...")
+        print(f"Starting PSO optimization... ({'minimization' if self.minimize else 'maximization'})")
         start_time = time.time()
+        iterations_performed = 0
         for iteration in range(self.max_iterations):
-            for i, particle in enumerate(self.particles):
-                fitness = particle.evaluate(self.objective_func)
-                if fitness < self.global_best_fitness:
-                    self.global_best_fitness = fitness
-                    self.global_best_position = particle.position.copy()
-                    # print(f"Iteration {iteration + 1}, Particle {i + 1}: New global best fitness = {self.global_best_fitness}")
+            iterations_performed += 1
+            for particle in self.particles:
+                fitness = particle.evaluate(self.objective_func, self.minimize)
+                if self.minimize:
+                    if fitness < self.global_best_fitness:
+                        self.global_best_fitness = fitness
+                        self.global_best_position = particle.position.copy()
+                else:
+                    if fitness > self.global_best_fitness:
+                        self.global_best_fitness = fitness
+                        self.global_best_position = particle.position.copy()
 
             if self._check_convergence():
-                print(f"Converged after {iteration + 1} iterations.")
+                print(f"Converged after {iterations_performed} iterations.")
                 break
-
             self._update_particles(iteration)
-            
-            # if (iteration + 1) % 10 == 0:
-            #     print(f"Completed {iteration + 1} iterations. Current best fitness: {self.global_best_fitness}")
 
         end_time = time.time()
         elapsed_time = end_time - start_time
         print(f"Optimization completed. Best fitness: {self.global_best_fitness}")
+        print(f"Position of best fitness: {self.global_best_position}")
         print(f"Time elapsed: {elapsed_time:.2f} seconds")
-        return self.global_best_position, self.global_best_fitness, elapsed_time
+        print(f"Total iterations performed: {iterations_performed}")
+        return self.global_best_position, self.global_best_fitness, elapsed_time, iterations_performed
 
     def _update_particles(self, iteration):
         w = self._calculate_inertia_weight(iteration)
-        c1 = self.options.get('SelfAdjustmentWeight', 1.4)
-        c2 = self.options.get('SocialAdjustmentWeight', 1.4)
-
         for particle in self.particles:
-            particle.update_velocity(self.global_best_position, w, c1, c2, self.vmax, self.velocity_pausing_coefficient)
-            particle.update_position(self.global_best_position, w, self.lb, self.ub)
+            particle.update_velocity(self.global_best_position, w, self.c1, self.c2, self.vmax)
+            particle.update_position(self.lb, self.ub)
 
     def _calculate_inertia_weight(self, iteration):
-        b = self.inertia_constant
-        t = iteration
-        T = self.max_iterations
-        return np.exp(-(b * t / T)) * b
+        return self.w_end + (self.w_start - self.w_end) * ((self.max_iterations - iteration) / self.max_iterations)
 
     def _check_convergence(self):
-        avg_fitness = np.mean([p.best_fitness for p in self.particles])
+        positions = np.array([p.position for p in self.particles])
+        position_range = np.max(positions, axis=0) - np.min(positions, axis=0)
+        fitness_range = np.max([p.best_fitness for p in self.particles]) - np.min([p.best_fitness for p in self.particles])
         tolerance = self.options.get('Tolerance', 1e-6)
-        converged = abs(avg_fitness - self.global_best_fitness) < tolerance
-        if converged:
-            print(f"Convergence achieved. Average fitness: {avg_fitness}, Global best fitness: {self.global_best_fitness}")
+        converged = np.all(position_range < tolerance) and fitness_range < tolerance
         return converged
-
-# # Example usage
-# if __name__ == "__main__":
-#     num_dimensions = int(input("Enter the number of dimensions: "))
-#     use_default = input("Use default bounds (-5.12 to 5.12)? (y/n): ").lower() == 'y'
-    
-#     if use_default:
-#         lb = [-5.12]*num_dimensions
-#         ub = [5.12]*num_dimensions
-#     else:
-#         lb_input = input("Enter the lower bound(s) (comma-separated if multiple): ")
-#         ub_input = input("Enter the upper bound(s) (comma-separated if multiple): ")
-#         lb = [float(x) for x in lb_input.split(',')]
-#         ub = [float(x) for x in ub_input.split(',')]
-    
-#     function_choice = input("Choose an objective function (1: Sphere, 2: Rastrigin): ")
-    
-#     if function_choice == '1':
-#         objective_func = funcs.sphere
-#     elif function_choice == '2':
-#         objective_func = funcs.rastrigin
-#     else:
-#         raise ValueError("Invalid function choice")
-
-#     pso = ParticleSwarm(objective_func, lb, ub, num_dimensions)
-#     best_position, best_fitness, elapsed_time = pso.optimize()
-
-#     print(f"Best position: {best_position}")
-#     print(f"Best fitness: {best_fitness}")
-#     print(f"Time elapsed: {elapsed_time:.2f} seconds")

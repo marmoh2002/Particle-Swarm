@@ -8,7 +8,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 3. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
 
-4. `funcs.py`: Contains 12 benchmark functions used for testing the PSO algorithm.
+4. `funcs.py`: Contains 30 benchmark functions used for testing the PSO algorithm.
 
 5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
 
@@ -33,27 +33,33 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 2. beale
 3. booth
 4. bukin
-5. cross_in_tray
-6. easom
-7. eggholder
-8. goldstein_price
-9. griewank
-10. holder_table
-11. levi
-12. levy
-13. matyas
-14. mccormick
-15. michalewicz
-16. rastrigin
-17. rosenbrock
-18. schaffer_n2
-19. schaffer_n4
-20. schwefel
-21. sphere
-22. styblinski_tang
-23. three_hump_camel
-24. trid
-25. Input custom function
+5. bukin_n6
+6. cross_in_tray
+7. drop_wave
+8. easom
+9. eggholder
+10. functions_menu
+11. goldstein_price
+12. griewank
+13. himmelblau
+14. holder_table
+15. langermann
+16. levi
+17. levy
+18. matyas
+19. mccormick
+20. michalewicz
+21. rastrigin
+22. rosenbrock
+23. schaffer_n2
+24. schaffer_n4
+25. schwefel
+26. shubert
+27. sphere
+28. styblinski_tang
+29. three_hump_camel
+30. trid
+31. Input custom function
 
 
 ## Requirements
