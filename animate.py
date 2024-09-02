@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import importlib
 from psalg import ParticleSwarm
+from matplotlib.animation import FuncAnimation
 
 def parse_user_function(func_str):
     """Parse user input string into a callable function."""
@@ -67,7 +68,7 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     minimize = input("Minimize the function? (y/n): ").lower() == 'y'
     
 
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize= minimize)
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize=minimize)
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
     initial_z = np.array([objective_func(p.position) for p in pso.particles])
@@ -114,8 +115,76 @@ def enumerate_functions(filename):
     print(f"{len(available_functions) + 1}. Input custom function")
     return available_functions
 
-# Update the available_functions in the main block
+def animate_pso_3d(objective_func, is_user_defined=False):
+    num_dimensions = 2
+    # Default bounds
+    default_lb = [-5.12, -5.12]
+    default_ub = [5.12, 5.12]
 
+    # Ask user if they want to specify custom bounds
+    use_custom_bounds = input("Do you want to specify custom bounds? (y/n): ").lower() == 'y'
+
+    if use_custom_bounds:
+        lb = [float(x) for x in input("Enter lower bounds (comma-separated): ").split(',')]
+        ub = [float(x) for x in input("Enter upper bounds (comma-separated): ").split(',')]
+    else:
+        lb = default_lb
+        ub = default_ub
+
+    fig = plt.figure(figsize=(12, 9))
+    ax = fig.add_subplot(111, projection='3d')
+
+    plot_3d_function(ax, objective_func, lb, ub, is_user_defined)
+
+    default_num_particles = 50  # Default number of particles
+    num_particles = input(f"Enter number of particles (default is {default_num_particles}): ")
+    num_particles = int(num_particles) if num_particles.isdigit() else default_num_particles
+
+    default_max_iterations = 100
+    max_iterations = input(f"Enter maximum number of iterations performed by PSO (default is {default_max_iterations}): ")
+    max_iterations = int(max_iterations) if max_iterations.isdigit() else default_max_iterations
+
+    minimize = input("Minimize the function? (y/n): ").lower() == 'y'
+
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, 
+                        options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, 
+                        minimize=minimize)
+
+    particles_scatter = ax.scatter([], [], [], color='red', s=50)
+    best_position_scatter = ax.scatter([], [], [], color='blue', s=100)
+
+    def update(frame):
+        if frame == 0:
+            positions = np.array([p.position for p in pso.particles])
+            z = np.array([objective_func(p.position) for p in pso.particles])
+        else:
+            for particle in pso.particles:
+                fitness = particle.evaluate(pso.objective_func, pso.minimize)
+                if pso.minimize:
+                    if fitness < pso.global_best_fitness:
+                        pso.global_best_fitness = fitness
+                        pso.global_best_position = particle.position.copy()
+                else:
+                    if fitness > pso.global_best_fitness:
+                        pso.global_best_fitness = fitness
+                        pso.global_best_position = particle.position.copy()
+
+            pso._update_particles(frame - 1)
+            positions = np.array([p.position for p in pso.particles])
+            z = np.array([objective_func(p.position) for p in pso.particles])
+
+        particles_scatter._offsets3d = (positions[:, 0], positions[:, 1], z)
+
+        best_z = objective_func(pso.global_best_position)
+        best_position_scatter._offsets3d = ([pso.global_best_position[0]], [pso.global_best_position[1]], [best_z])
+
+        ax.set_title(f'PSO Optimization - Iteration {frame}')
+        return particles_scatter, best_position_scatter
+
+    anim = FuncAnimation(fig, update, frames=max_iterations+1, interval=100, blit=False, repeat=False)
+    plt.show()
+
+# Update the main block to include the animation option
 if __name__ == "__main__":
     available_functions = enumerate_functions("funcs")
     
@@ -137,7 +206,13 @@ if __name__ == "__main__":
                 func_name = available_functions[index]
                 objective_func = getattr(importlib.import_module("funcs"), func_name)
                 print(f"Visualizing {func_name} function...")
-                visualize_pso_3d(objective_func)
+                
+                # Ask user if they want to animate or just visualize
+                animate = input("Do you want to animate the optimization? (y/n): ").lower() == 'y'
+                if animate:
+                    animate_pso_3d(objective_func)
+                else:
+                    visualize_pso_3d(objective_func)
             elif index == len(available_functions):
                 print("Enter your custom function using 'x' as the input variable.")
                 print("Example: np.sin(x[0]) + np.cos(x[1])")
@@ -145,7 +220,13 @@ if __name__ == "__main__":
                 user_func = parse_user_function(user_func_str)
                 if user_func:
                     print("Visualizing user-defined function...")
-                    visualize_pso_3d(user_func, is_user_defined=True)
+                    
+                    # Ask user if they want to animate or just visualize
+                    animate = input("Do you want to animate the optimization? (y/n): ").lower() == 'y'
+                    if animate:
+                        animate_pso_3d(user_func, is_user_defined=True)
+                    else:
+                        visualize_pso_3d(user_func, is_user_defined=True)
             else:
                 print("Invalid input. Please choose a number from the list.")
                 continue

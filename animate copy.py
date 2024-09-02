@@ -47,12 +47,13 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
         lb = default_lb
         ub = default_ub
 
-    fig = plt.figure(figsize=(20, 9))
-    ax1 = fig.add_subplot(121, projection='3d')
-    ax2 = fig.add_subplot(122, projection='3d')
+    fig_anim = plt.figure(figsize=(10, 8))
+    ax_anim = fig_anim.add_subplot(111, projection='3d')
+    plot_3d_function(ax_anim, objective_func, lb, ub, is_user_defined)
 
-    plot_3d_function(ax1, objective_func, lb, ub, is_user_defined)
-    plot_3d_function(ax2, objective_func, lb, ub, is_user_defined)
+    # Initialize empty lists for scatter and quiver plots
+    scatter = None
+    quiver = None
 
     default_num_particles = 100  # Default number of particles
     # Ask user for number of particles
@@ -67,29 +68,70 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     minimize = input("Minimize the function? (y/n): ").lower() == 'y'
     
 
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize= minimize)
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize=minimize)
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
     initial_z = np.array([objective_func(p.position) for p in pso.particles])
-    ax1.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, 
-                color='magenta', s=35, label='Initial positions')
-    ax1.legend()
+    ax_anim.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, 
+                    color='magenta', s=35, label='Initial positions')
+    ax_anim.legend()
 
-    # Optimize
-    best_position, best_fitness, _ = pso.optimize()
+    # Initialize empty lists for scatter and quiver plots
+    scatter = None
+    quiver = None
 
-    # Plot final positions
+    for iteration in range(max_iterations):
+        # Get current positions and evaluate
+        current_positions = np.array([p.position for p in pso.particles])
+        current_z = np.array([objective_func(p.position) for p in pso.particles])
+
+        # Remove previous scatter and quiver plots
+        if scatter:
+            scatter.remove()
+        if quiver:
+            quiver.remove()
+
+        # Plot current positions
+        scatter = ax_anim.scatter(current_positions[:, 0], current_positions[:, 1], current_z, 
+                                  color='orange', s=35, label='Current positions')
+
+        # Perform one iteration of PSO
+        pso._update_particles(iteration)
+        for particle in pso.particles:
+            particle.evaluate(objective_func, pso.minimize)
+
+        # Get new positions after update
+        new_positions = np.array([p.position for p in pso.particles])
+        new_z = np.array([objective_func(p.position) for p in pso.particles])
+
+        # Plot directions using quiver
+        quiver = ax_anim.quiver(current_positions[:, 0], current_positions[:, 1], current_z,
+                                new_positions[:, 0] - current_positions[:, 0],
+                                new_positions[:, 1] - current_positions[:, 1],
+                                new_z - current_z,
+                                color='red', length=1, normalize=True)
+
+        # Update title with iteration number
+        ax_anim.set_title(f'PSO Iteration {iteration + 1}')
+
+        # Pause to create animation effect
+        plt.pause(0.1)
+
+    # Plot final positions and best position
     final_positions = np.array([p.position for p in pso.particles])
     final_z = np.array([objective_func(p.position) for p in pso.particles])
-    ax2.scatter(final_positions[:, 0], final_positions[:, 1], final_z, 
-                color='orange', s=35, label='Final positions')
+    ax_anim.scatter(final_positions[:, 0], final_positions[:, 1], final_z, 
+                    color='green', s=35, label='Final positions')
+    
+    best_position, best_fitness, _ = pso.optimize()
     best_z = objective_func(best_position)
-    ax2.scatter(best_position[0], best_position[1], best_z, 
-                color='blue', s=100, label='Best position')
-    ax2.legend()
+    ax_anim.scatter(best_position[0], best_position[1], best_z, 
+                    color='blue', s=100, label='Best position')
+    ax_anim.legend()
 
-    plt.tight_layout()
     plt.show()
+
+    # ... (keep the rest of the function as is)
     
 def enumerate_functions(filename):
     """
