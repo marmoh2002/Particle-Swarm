@@ -24,44 +24,35 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
    python check_implementation.py
    ```
 
-## TODO
-
-- revise `psalg.py` functionality.
-
 ## List of Benchmark Functions Supported
 1. ackley
 2. beale
 3. booth
 4. bukin
-5. bukin_n6
-6. cross_in_tray
-7. drop_wave
-8. easom
-9. eggholder
-10. functions_menu
-11. goldstein_price
-12. griewank
-13. himmelblau
-14. holder_table
-15. langermann
-16. levi
-17. levy
-18. matyas
-19. mccormick
-20. michalewicz
-21. rastrigin
-22. rosenbrock
-23. schaffer_n2
-24. schaffer_n4
-25. schwefel
-26. shubert
-27. sphere
-28. styblinski_tang
-29. three_hump_camel
-30. trid
-31. Input custom function
-
-
+5. cross_in_tray
+6. drop_wave
+7. easom
+8. eggholder
+9. goldstein_price
+10. griewank
+11. himmelblau
+12. holder_table
+13. langermann
+14. levy
+15. matyas
+16. mccormick
+17. michalewicz
+18. rastrigin
+19. rosenbrock
+20. schaffer_n2
+21. schaffer_n4
+22. schwefel
+23. shubert
+24. sphere
+25. styblinski_tang
+26. three_hump_camel
+27. trid
+28. Input custom function
 ## Requirements
 
 - NumPy
