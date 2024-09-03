@@ -10,6 +10,7 @@ default_num_iterations = 600
 default_tolerance = 1e-6
 _verbose = False
 minimized = True
+
 def run_pso_multiple_times(num_runs=default_num_runs, num_dimensions=default_num_dimensions, lb=[-10] * default_num_dimensions, ub=[10] * default_num_dimensions, function=funcs.sphere, swarm_size = default_num_particles, max_iterations = default_num_iterations, verbose = False,minimized = True, tolerance = default_tolerance):
     optimal_values = []
     elapsed_times = []
