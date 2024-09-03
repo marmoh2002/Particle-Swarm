@@ -8,7 +8,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 3. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
 
-4. `funcs.py`: Contains 30 benchmark functions used for testing the PSO algorithm.
+4. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
 
 5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
 
