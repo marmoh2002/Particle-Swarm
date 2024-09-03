@@ -64,6 +64,7 @@ class ParticleSwarm:
         self.global_best_position = np.random.uniform(self.lb, self.ub, self.num_dimensions)
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
         self.vmax = 0.2 * (self.ub - self.lb)
+        self.tolerance = self.options.get('Tolerance', 1e-6)
 
     def optimize(self, verbose=True):
         if verbose:
@@ -111,8 +112,7 @@ class ParticleSwarm:
         positions = np.array([p.position for p in self.particles])
         position_range = np.max(positions, axis=0) - np.min(positions, axis=0)
         fitness_range = np.max([p.best_fitness for p in self.particles]) - np.min([p.best_fitness for p in self.particles])
-        tolerance = self.options.get('Tolerance', 1e-6)
-        converged = np.all(position_range < tolerance) and fitness_range < tolerance
+        converged = np.all(position_range < self.tolerance) and fitness_range < self.tolerance
         return converged
 
             

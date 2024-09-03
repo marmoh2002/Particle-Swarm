@@ -101,13 +101,10 @@ def michalewicz(x):
     i = np.arange(1, d + 1)
     return -np.sum(np.sin(x) * np.sin(i * x**2 / np.pi)**(2 * m))
 
-
 def mccormick(x):
     """McCormick function"""
     x1, x2 = x
     return np.sin(x1 + x2) + (x1 - x2)**2 - 1.5*x1 + 2.5*x2 + 1
-
-
 
 def rastrigin(x):
     """Rastrigin function"""
@@ -167,18 +164,3 @@ def parse_user_function(func_str):
     except:
         print("Invalid function. Please try again.")
         return None
-    
-# def functions_menu():
-    
-#     """Returns an enumeration of all function names in this file, excluding itself"""
-    
-#     available_functions = [name for name, obj in globals().items()
-#             if inspect.isfunction(obj) and obj.__module__ == __name__ and name != 'functions_menu']
-
-   
-#     # print("Available functions:")
-#     # for i, func in enumerate(available_functions, 1):
-#     #     print(f"{i}. {func}")
-#     # print(f"{len(available_functions) + 1}. Input custom function")
-#     return available_functions
-    

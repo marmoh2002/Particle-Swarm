@@ -9,6 +9,7 @@ def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
     y = np.linspace(lb[1], ub[1], 100)
     X, Y = np.meshgrid(x, y)
     Z = np.zeros_like(X)
+    
     for i in range(X.shape[0]):
         for j in range(X.shape[1]):
             Z[i, j] = objective_func(np.array([X[i, j], Y[i, j]]))
@@ -53,32 +54,24 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     default_max_iterations = 500
     max_iterations = input(f"Enter maximum number of iterations performed by PSO (default is {default_max_iterations}): ")
     max_iterations = int(max_iterations) if max_iterations.isdigit() else default_max_iterations
-
-
     minimize = input("Minimize the function? (y/n): ").lower() == 'y'
-    
-
     pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize= minimize)
+
     # Plot initial positions
     initial_positions = np.array([p.position for p in pso.particles])
     initial_z = np.array([p.evaluate(objective_func, minimize) for p in pso.particles])
-    ax1.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, 
-                color='magenta', s=35, label='Initial positions')
+    ax1.scatter(initial_positions[:, 0], initial_positions[:, 1], initial_z, color='magenta', s=35, label='Initial positions')
     ax1.legend()
-
-    # Optimize
     best_position, best_fitness, _ , _ = pso.optimize(verbose=True)
-
-    # Plot final positions
     final_positions = np.array([p.position for p in pso.particles])
     final_z = np.array([p.evaluate(objective_func, minimize) for p in pso.particles])
+
     ax2.scatter(final_positions[:, 0], final_positions[:, 1], final_z, 
                 color='orange', s=35, label='Final positions')
     best_z = objective_func(best_position)
     ax2.scatter(best_position[0], best_position[1], best_z, 
                 color='blue', s=100, label='Best position')
     ax2.legend()
-
     plt.tight_layout()
     plt.show()
     
@@ -91,14 +84,11 @@ def enumerate_functions(filename):
     
     Returns:
     list: A list of function names available for optimization.
-    """
-       
+    """    
     # Dynamically import the module
-    module = importlib.import_module(filename)
-    
+    module = importlib.import_module(filename) 
     # Get all functions from the imported module
     available_functions = [func for func in dir(module) if callable(getattr(module, func)) and not func.startswith("parse_user_function")]
-
     print("Available functions:")
     for i, func in enumerate(available_functions, 1):
         print(f"{i}. {func}")
@@ -106,22 +96,17 @@ def enumerate_functions(filename):
     return available_functions
 
 # Update the available_functions in the main block
-
 if __name__ == "__main__":
     available_functions = enumerate_functions("funcs")
-    
     while True:
         print("\nAvailable functions:")
         for i, func in enumerate(available_functions, 1):
             print(f"{i}. {func}")
         print(f"{len(available_functions) + 1}. Input custom function")
-        
         choice = input("Choose a function to visualize (enter number or '0' to exit): ")
-        
         if choice == '0':
             print("Exiting...")
             break
-        
         try:
             index = int(choice) - 1
             if 0 <= index < len(available_functions):
@@ -146,7 +131,6 @@ if __name__ == "__main__":
         except ValueError:
             print("Invalid input. Please enter a number.")
             continue
-        
         # Prompt user after visualization
         continue_choice = input("\nWould you like to visualize another function? (y/n): ").lower()
         if continue_choice != 'y':
