@@ -53,6 +53,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 26. three_hump_camel
 27. trid
 28. Input custom function
+
 ## Requirements
 
 - NumPy
