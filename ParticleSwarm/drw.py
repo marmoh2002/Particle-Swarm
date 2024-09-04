@@ -46,7 +46,7 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     """
     # Get list of PNG files in the folder, sorted by name
     images = sorted(glob.glob(f"{folder_path}/*.png"), key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
-    output_filename = objective_func+"_"+optimization_type
+    output_filename = f"{objective_func.__name__}_{optimization_type}.gif"
     # Read in all the images
     image_list = []
     for filename in images:

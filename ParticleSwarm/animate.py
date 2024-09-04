@@ -27,7 +27,7 @@ def start_anim(objective_func):
     pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations, 'Tolerance':tolerance}, minimize= isMinimized, isanimated=True)
     pso.optimize(path = path)
     print("Creating your GIF")
-    create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type,path  = path)
+    create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path)
     print("Opening the generated GIF...")
     
     exit()
