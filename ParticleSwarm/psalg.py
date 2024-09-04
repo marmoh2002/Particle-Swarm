@@ -1,6 +1,11 @@
 import numpy as np
 import time
 import funcs as funcs
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from plotted_pso import plot_3d_function
+from drw import draw_frame
 
 class Particle:
     def __init__(self, lb: np.ndarray, ub: np.ndarray, num_dimensions: int, minimize: bool):
@@ -38,13 +43,14 @@ class Particle:
         return fitness
 
 class ParticleSwarm:
-    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True):
+    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True, isanimated: bool = False):
         self.objective_func = objective_func
         self.lb = np.array(lb)
         self.ub = np.array(ub)
         self.num_dimensions = num_dimensions
         self.minimize = minimize
-        
+        self.isConverged = False
+        self.isAnimated = isanimated
         if len(self.lb) == 1:
             self.lb = np.repeat(self.lb, self.num_dimensions)
         if len(self.ub) == 1:
@@ -56,17 +62,28 @@ class ParticleSwarm:
         self.options = options if options is not None else {}
         self.swarm_size = self.options.get('SwarmSize', 50)
         self.max_iterations = self.options.get('MaxIterations', 1000)
-        self.w_start = self.options.get('InertiaStartWeight', 0.9)
-        self.w_end = self.options.get('InertiaEndWeight', 0.4)
-        self.c1 = self.options.get('SelfAdjustmentWeight', 2.0)
-        self.c2 = self.options.get('SocialAdjustmentWeight', 2.0)
+        self.w_start = self.options.get('InertiaStartWeight', 0.5)
+        self.w_end = self.options.get('InertiaEndWeight', 0.1)
+        # The values 1.49618 are derived from the constriction coefficient method
+        # which often provides better convergence and stability
+        self.c1 = self.options.get('SelfAdjustmentWeight', 1.49618)
+        self.c2 = self.options.get('SocialAdjustmentWeight', 1.49618)
+        
+        # Implement adaptive coefficients
+        self.c1_start = self.options.get('SelfAdjustmentWeightStart', 2.5)
+        self.c1_end = self.options.get('SelfAdjustmentWeightEnd', 0.5)
+        # self.c2_start = self.options.get('SocialAdjustmentWeightStart', 0.5)
+        # self.c2_end = self.options.get('SocialAdjustmentWeightEnd', 2.5)
         self.particles = [Particle(self.lb, self.ub, self.num_dimensions, self.minimize) for _ in range(self.swarm_size)]
         self.global_best_position = np.random.uniform(self.lb, self.ub, self.num_dimensions)
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
-        self.vmax = 0.2 * (self.ub - self.lb)
+        self.vmax = 0.08 * (self.ub - self.lb)
         self.tolerance = self.options.get('Tolerance', 1e-6)
-
-    def optimize(self, verbose=True):
+    
+    def send_to_animate(self, iterat, path):
+        draw_frame(self.particles, self.global_best_fitness,self.global_best_position , self.objective_func, run_num = iterat, path = path)
+    
+    def optimize(self, verbose=True,path = None):
         if verbose:
             print(f"Starting PSO optimization... ({'minimization' if self.minimize else 'maximization'})")
         start_time = time.time()
@@ -83,8 +100,10 @@ class ParticleSwarm:
                     if fitness > self.global_best_fitness:
                         self.global_best_fitness = fitness
                         self.global_best_position = particle.position.copy()
-
+            if self.isAnimated:
+                self.send_to_animate(iterations_performed, path)
             if self._check_convergence():
+                self.isConverged = True
                 if verbose:
                     print(f"Converged after {iterations_performed} iterations.")
                 break
@@ -114,5 +133,3 @@ class ParticleSwarm:
         fitness_range = np.max([p.best_fitness for p in self.particles]) - np.min([p.best_fitness for p in self.particles])
         converged = np.all(position_range < self.tolerance) and fitness_range < self.tolerance
         return converged
-
-            

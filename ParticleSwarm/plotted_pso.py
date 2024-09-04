@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import importlib
-from psalg import ParticleSwarm
 
 def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
     x = np.linspace(lb[0], ub[0], 100)
@@ -25,6 +24,7 @@ def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
         
 
 def visualize_pso_3d(objective_func, is_user_defined=False):
+    from psalg import ParticleSwarm
     num_dimensions = 2
     # Default bounds
     default_lb = [-5.12, -5.12]
@@ -47,7 +47,7 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     plot_3d_function(ax1, objective_func, lb, ub, is_user_defined)
     plot_3d_function(ax2, objective_func, lb, ub, is_user_defined)
 
-    default_num_particles = 100  
+    default_num_particles = 50  
     num_particles = input(f"Enter number of particles (default is {default_num_particles}): ")
     num_particles = int(num_particles) if num_particles.isdigit() else default_num_particles
 
