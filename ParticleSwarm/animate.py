@@ -45,13 +45,15 @@ def start_anim(objective_func):
     pso.optimize(path = path)
     print("Creating your GIF")
     create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path)
-    # gif_path = os.path.abspath(gif_path) 
-    exit()
 
 if __name__ == "__main__":
-    available_functions = enumerate_functions("funcs")
+    available_functions = enumerate_functions("funcs", _verbose = False)
     
     while True:
+        print("\nAvailable functions:")
+        for i, func in enumerate(available_functions, 1):
+            print(f"{i}. {func}")
+        print(f"{len(available_functions) + 1}. Input custom function")
         choice = input("Choose a function to visualize (enter number or '0' to exit): ")
         
         if choice == '0':
@@ -75,4 +77,9 @@ if __name__ == "__main__":
         except ValueError:
             print("Invalid input. Please enter a number.")
             continue
-
+        
+        # Add prompt to visualize another function or exit
+        visualize_again = int(input("   1. Visualize another function\n   0. Exit\n"))
+        if visualize_again != 1:
+            print("Exiting...")
+            break

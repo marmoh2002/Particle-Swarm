@@ -22,10 +22,8 @@ def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
     z = np.array([p.evaluate(objective_func, minimize) for p in particles])
     ax.scatter(positions[:, 0], positions[:, 1], z, color='red', s=20)
     ax.scatter(best_pos[0], best_pos[1], g_best_fit, color='black', s=45, label=f'best fitness {g_best_fit:0.4f}')
-
     # Add a text label for the global best fitness
     ax.legend()
-    ax.set_title(f"Run number {run_num}")
     plt.tight_layout()
     # plt.show(block=False)
     print(f"loading gif... {run_num}")
@@ -37,6 +35,8 @@ def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
                     os.unlink(file_path)
         else:
             os.makedirs(path)
+    ax.set_title(f'\nVisualization of PSO on {objective_func.__name__.capitalize()} Function\nrun no. {run_num}')
+       
     plt.savefig(f'ParticleSwarm/pso_figures/{run_num}.png')
     plt.close(fig)
        
@@ -49,7 +49,6 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     :param duration: Duration of each frame in the GIF (in seconds)
     """
     # Get list of PNG files in the folder, sorted by name
-    print(f"Current working directory: {os.getcwd()}")
     images = sorted(glob.glob(f"{folder_path}/*.png"), key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
     folder_name = os.path.join("ParticleSwarm", "Animated")
     if not os.path.exists(folder_name):
@@ -66,7 +65,6 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
             shutil.rmtree(folder_path)
         except PermissionError:
             print(f"Warning: Unable to remove {folder_path}. It may be in use.")
-    # Print current working directory
     print(f"GIF created successfully: {output_filename}")
     print("Opening the generated GIF...")
     if os.path.exists(output_filename):

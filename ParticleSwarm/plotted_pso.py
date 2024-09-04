@@ -75,7 +75,7 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     plt.tight_layout()
     plt.show()
     
-def enumerate_functions(filename):
+def enumerate_functions(filename, _verbose = True):
     """
     Enumerate all functions in the specified module.
     
@@ -89,15 +89,16 @@ def enumerate_functions(filename):
     module = importlib.import_module(filename) 
     # Get all functions from the imported module
     available_functions = [func for func in dir(module) if callable(getattr(module, func)) and not func.startswith("parse_user_function")]
-    print("Available functions:")
-    for i, func in enumerate(available_functions, 1):
-        print(f"{i}. {func}")
-    print(f"{len(available_functions) + 1}. Input custom function")
+    if _verbose:
+        print("Available functions:")
+        for i, func in enumerate(available_functions, 1):
+            print(f"{i}. {func}")
+        print(f"{len(available_functions) + 1}. Input custom function")
     return available_functions
 
 # Update the available_functions in the main block
 if __name__ == "__main__":
-    available_functions = enumerate_functions("funcs")
+    available_functions = enumerate_functions("funcs", _verbose = False)
     while True:
         print("\nAvailable functions:")
         for i, func in enumerate(available_functions, 1):
