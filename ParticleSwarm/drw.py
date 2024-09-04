@@ -7,6 +7,7 @@ import imageio
 import glob
 import platform
 import subprocess
+import shutil
 
 def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
     num_dimensions = 2
@@ -64,10 +65,14 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
         os.remove(output_filename)
     # Save the new GIF
     imageio.mimsave(output_filename, image_list, duration=duration, loop=0)  # loop=0 makes it repeat indefinitely
-    print(f"Repeating GIF created successfully: {output_filename}")
-
+    if os.path.exists(folder_path):
+        try:
+            shutil.rmtree(folder_path)
+        except PermissionError:
+            print(f"Warning: Unable to remove {folder_path}. It may be in use.")
+    print(f"GIF created successfully: {output_filename}")
+    print("Opening the generated GIF...")
     gif_path = f"{objective_func.__name__}_{optimization_type}.gif"
-    
     if os.path.exists(gif_path):
         if platform.system() == 'Darwin':  # macOS
             subprocess.call(('open', gif_path))

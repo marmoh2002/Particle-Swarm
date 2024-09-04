@@ -7,6 +7,7 @@ from funcs import parse_user_function
 from plotted_pso import enumerate_functions
 from drw import create_gif_from_images
 
+
 def start_anim(objective_func):
     path = 'ParticleSwarm/pso_figures'
     num_dimensions = 2
@@ -39,11 +40,14 @@ def start_anim(objective_func):
         pass
     else:
         print("Invalid choice, using default value instead")
+    del setting
     pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations, 'Tolerance':tolerance}, minimize= isMinimized, isanimated=True)
     pso.optimize(path = path)
     print("Creating your GIF")
     create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path)
-    print("Opening the generated GIF...")
+    # gif_path = os.path.abspath(gif_path)
+    
+    
     exit()
 
 if __name__ == "__main__":
