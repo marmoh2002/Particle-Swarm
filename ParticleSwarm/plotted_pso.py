@@ -117,8 +117,6 @@ if __name__ == "__main__":
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
             elif index == len(available_functions):
-                print("Enter your custom function using 'x' as the input variable.")
-                print("Example: np.sin(x[0]) + np.cos(x[1])")
                 user_func_str = input("Function: ")
                 user_function = getattr(importlib.import_module("funcs"), "parse_user_function")
                 user_func = user_function(user_func_str)

@@ -6,11 +6,15 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 1. `psalg.py`: Core implementation of the PSO algorithm.
 
-3. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
+3. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
 
-4. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
+4. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
 
 5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
+
+6. `drw.py`: Contains functions for visualizing the Particle Swarm Optimization (PSO) process and creating animated GIFs of the optimization.
+
+7. `animate.py`: Creates animated visualizations of the PSO process, allowing users to choose benchmark functions or input custom functions for optimization.
 
 ## Usage
 
@@ -23,7 +27,6 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
    ```
    python check_implementation.py
    ```
-
 ## List of Benchmark Functions Supported
 1. ackley
 2. beale

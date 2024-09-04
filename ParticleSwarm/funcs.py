@@ -159,6 +159,8 @@ def trid(x):
 
 def parse_user_function(func_str):
     """Parse user input string into a callable function."""
+    print("Enter your custom function using 'x' as the input variable.")
+    print("Example: np.sin(x[0]) + np.cos(x[1])")
     try:
         return lambda x: eval(func_str, {"x": x, "np": np})
     except:
