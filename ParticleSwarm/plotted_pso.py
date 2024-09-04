@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import importlib
-from psalg import ParticleSwarm
+
 
 def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
     x = np.linspace(lb[0], ub[0], 100)
@@ -25,6 +25,7 @@ def plot_3d_function(ax, objective_func, lb, ub, is_user_defined=False):
         
 
 def visualize_pso_3d(objective_func, is_user_defined=False):
+    from psalg import ParticleSwarm
     num_dimensions = 2
     # Default bounds
     default_lb = [-5.12, -5.12]

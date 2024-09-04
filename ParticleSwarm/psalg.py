@@ -1,6 +1,13 @@
 import numpy as np
 import time
 import funcs as funcs
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from plotted_pso import plot_3d_function
+from drw import draw_frame
+
+
 
 class Particle:
     def __init__(self, lb: np.ndarray, ub: np.ndarray, num_dimensions: int, minimize: bool):
@@ -38,13 +45,14 @@ class Particle:
         return fitness
 
 class ParticleSwarm:
-    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True):
+    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True, isanimated: bool = False):
         self.objective_func = objective_func
         self.lb = np.array(lb)
         self.ub = np.array(ub)
         self.num_dimensions = num_dimensions
         self.minimize = minimize
-        
+        self.isConverged = False
+        self.isAnimated = isanimated
         if len(self.lb) == 1:
             self.lb = np.repeat(self.lb, self.num_dimensions)
         if len(self.ub) == 1:
@@ -65,8 +73,11 @@ class ParticleSwarm:
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
         self.vmax = 0.2 * (self.ub - self.lb)
         self.tolerance = self.options.get('Tolerance', 1e-6)
-
-    def optimize(self, verbose=True):
+    
+    def send_to_animate(self, iterat, path):
+        draw_frame(self.particles, self.objective_func, run_num = iterat, path = path)
+    
+    def optimize(self, verbose=True,path = None):
         if verbose:
             print(f"Starting PSO optimization... ({'minimization' if self.minimize else 'maximization'})")
         start_time = time.time()
@@ -83,11 +94,14 @@ class ParticleSwarm:
                     if fitness > self.global_best_fitness:
                         self.global_best_fitness = fitness
                         self.global_best_position = particle.position.copy()
-
+            if self.isAnimated:
+                self.send_to_animate(iterations_performed, path)
             if self._check_convergence():
+                self.isConverged = True
                 if verbose:
                     print(f"Converged after {iterations_performed} iterations.")
                 break
+
             self._update_particles(iteration)
 
         end_time = time.time()
@@ -115,4 +129,23 @@ class ParticleSwarm:
         converged = np.all(position_range < self.tolerance) and fitness_range < self.tolerance
         return converged
 
-            
+
+
+# def draw_frame(particles, objective_func):
+#     num_dimensions = 2
+#     # Default bounds
+#     lb = [-5.12, -5.12]
+#     ub = [5.12, 5.12]
+#     minimize = True
+#     fig = plt.figure(figsize=(20, 9))
+#     ax = fig.add_subplot(121, projection='3d')
+#     plot_3d_function(ax, objective_func, lb, ub)
+#     positions = np.array([p.position for p in particles])
+#     z = np.array([p.evaluate(objective_func, minimize) for p in particles])
+#     ax.scatter(positions[:, 0], positions[:, 1], z, color='magenta', s=35, label='positions')
+#     ax.legend()
+#     plt.tight_layout()
+#     plt.show(block=False)
+#     plt.pause(0.1)  # 100 milliseconds
+#     plt.close(fig)
+       
