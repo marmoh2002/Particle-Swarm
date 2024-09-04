@@ -45,9 +45,7 @@ def start_anim(objective_func):
     pso.optimize(path = path)
     print("Creating your GIF")
     create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path)
-    # gif_path = os.path.abspath(gif_path)
-    
-    
+    # gif_path = os.path.abspath(gif_path) 
     exit()
 
 if __name__ == "__main__":

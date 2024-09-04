@@ -49,6 +49,7 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     :param duration: Duration of each frame in the GIF (in seconds)
     """
     # Get list of PNG files in the folder, sorted by name
+    print(f"Current working directory: {os.getcwd()}")
     images = sorted(glob.glob(f"{folder_path}/*.png"), key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
     folder_name = "ParticleSwarm/Animated"
     if not os.path.exists(folder_name):
@@ -58,11 +59,6 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     image_list = []
     for filename in images:
         image_list.append(imageio.imread(filename))
-    
-    # Save the images as a GIF
-    # Check if a GIF with the same name already exists and delete it if it does
-    if os.path.exists(output_filename):
-        os.remove(output_filename)
     # Save the new GIF
     imageio.mimsave(output_filename, image_list, duration=duration, loop=0)  # loop=0 makes it repeat indefinitely
     if os.path.exists(folder_path):
@@ -70,15 +66,16 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
             shutil.rmtree(folder_path)
         except PermissionError:
             print(f"Warning: Unable to remove {folder_path}. It may be in use.")
+    # Print current working directory
+    print(f"Current working directory: {os.getcwd()}")
     print(f"GIF created successfully: {output_filename}")
     print("Opening the generated GIF...")
-    gif_path = f"{objective_func.__name__}_{optimization_type}.gif"
-    if os.path.exists(gif_path):
+    if os.path.exists(output_filename):
         if platform.system() == 'Darwin':  # macOS
-            subprocess.call(('open', gif_path))
+            subprocess.call(('open', output_filename))
         elif platform.system() == 'Windows':
-            os.startfile(gif_path)
+            os.startfile(output_filename)
         else:  # Linux and other Unix-like systems
-            subprocess.call(('xdg-open', gif_path))
+            subprocess.call(('xdg-open', output_filename))
     else:
-        print(f"Error: The GIF file was not found at {gif_path}")
+        print(f"Error: The GIF file was not found at {output_filename}")
