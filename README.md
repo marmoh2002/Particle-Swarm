@@ -28,7 +28,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
    python check_implementation.py
    ```
 
-2. Run `animate.py` to visualize the PSO algorithm on a chosen benchmark function:
+3. Run `animate.py` to visualize the PSO algorithm on a chosen benchmark function:
    ```
    python animate.py
    ```
