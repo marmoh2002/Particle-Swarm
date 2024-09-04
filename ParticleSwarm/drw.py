@@ -51,10 +51,10 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     # Get list of PNG files in the folder, sorted by name
     print(f"Current working directory: {os.getcwd()}")
     images = sorted(glob.glob(f"{folder_path}/*.png"), key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
-    folder_name = "ParticleSwarm/Animated"
+    folder_name = os.path.join("ParticleSwarm", "Animated")
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
-    output_filename = f"ParticleSwarm/Animated/{objective_func.__name__}_{optimization_type}.gif"
+    output_filename = os.path.join(folder_name, f"{objective_func.__name__}_{optimization_type}.gif")
     # Read in all the images
     image_list = []
     for filename in images:
@@ -67,7 +67,6 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
         except PermissionError:
             print(f"Warning: Unable to remove {folder_path}. It may be in use.")
     # Print current working directory
-    print(f"Current working directory: {os.getcwd()}")
     print(f"GIF created successfully: {output_filename}")
     print("Opening the generated GIF...")
     if os.path.exists(output_filename):
