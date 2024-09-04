@@ -60,7 +60,7 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     imageio.mimsave(output_filename, image_list, duration=duration, loop=0)  # loop=0 makes it repeat indefinitely
     print(f"Repeating GIF created successfully: {output_filename}")
 
-    gif_path = 'animation.gif'
+    gif_path = 'output_filename.gif'
     
     if os.path.exists(gif_path):
         if platform.system() == 'Darwin':  # macOS
