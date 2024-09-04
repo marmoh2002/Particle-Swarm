@@ -2,6 +2,9 @@
 
 This project implements and visualizes the Particle Swarm Optimization algorithm for various benchmark functions.
 
+## Folders
+1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
+
 ## Files
 
 1. `psalg.py`: Core implementation of the PSO algorithm.
