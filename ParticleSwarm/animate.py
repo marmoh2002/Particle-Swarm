@@ -10,15 +10,25 @@ from drw import create_gif_from_images
 def start_anim(objective_func):
     path = 'pso_figures'
     num_dimensions = 2
-    num_particles = 20
+    num_particles = 50
+    tolerance = 0.01
     lb = [-5.12, -5.12]
     ub = [5.12, 5.12]
-    max_iterations = 100
-    minimize = True
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations}, minimize= minimize, isanimated=True)
+    max_iterations = 60
+    isMinimized=True
+    setting = int(input("   1. Minimize Function\n  2. Maximize Function\n"))
+    if setting == 1:
+        isMinimized = True
+    elif setting == 2:
+        isMinimized = False
+    else:
+        print("Invalid choice, using minimization instead")
+    optimization_type = "minimization" if isMinimized else "maximization"
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations, 'Tolerance':tolerance}, minimize= isMinimized, isanimated=True)
     pso.optimize(path = path)
-    print("Good day")
-    create_gif_from_images(path)
+    print("Creating your GIF")
+    create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type,path  = path)
+    print("Opening the generated GIF...")
     
     exit()
 

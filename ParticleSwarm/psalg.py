@@ -7,8 +7,6 @@ from mpl_toolkits.mplot3d import Axes3D
 from plotted_pso import plot_3d_function
 from drw import draw_frame
 
-
-
 class Particle:
     def __init__(self, lb: np.ndarray, ub: np.ndarray, num_dimensions: int, minimize: bool):
         self.position = np.random.uniform(lb, ub, num_dimensions)
@@ -64,14 +62,23 @@ class ParticleSwarm:
         self.options = options if options is not None else {}
         self.swarm_size = self.options.get('SwarmSize', 50)
         self.max_iterations = self.options.get('MaxIterations', 1000)
-        self.w_start = self.options.get('InertiaStartWeight', 0.9)
-        self.w_end = self.options.get('InertiaEndWeight', 0.4)
-        self.c1 = self.options.get('SelfAdjustmentWeight', 2.0)
-        self.c2 = self.options.get('SocialAdjustmentWeight', 2.0)
+        self.w_start = self.options.get('InertiaStartWeight', 0.5)
+        self.w_end = self.options.get('InertiaEndWeight', 0.1)
+        # The values 1.49618 are derived from the constriction coefficient method
+        # which often provides better convergence and stability
+        self.c1 = self.options.get('SelfAdjustmentWeight', 1.49618)
+        self.c2 = self.options.get('SocialAdjustmentWeight', 1.49618)
+        
+        # Implement adaptive coefficients
+        self.c1_start = self.options.get('SelfAdjustmentWeightStart', 2.5)
+        self.c1_end = self.options.get('SelfAdjustmentWeightEnd', 0.5)
+        # self.c2_start = self.options.get('SocialAdjustmentWeightStart', 0.5)
+        # self.c2_end = self.options.get('SocialAdjustmentWeightEnd', 2.5)
         self.particles = [Particle(self.lb, self.ub, self.num_dimensions, self.minimize) for _ in range(self.swarm_size)]
+        
         self.global_best_position = np.random.uniform(self.lb, self.ub, self.num_dimensions)
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
-        self.vmax = 0.2 * (self.ub - self.lb)
+        self.vmax = 0.08 * (self.ub - self.lb)
         self.tolerance = self.options.get('Tolerance', 1e-6)
     
     def send_to_animate(self, iterat, path):
@@ -101,7 +108,6 @@ class ParticleSwarm:
                 if verbose:
                     print(f"Converged after {iterations_performed} iterations.")
                 break
-
             self._update_particles(iteration)
 
         end_time = time.time()
@@ -128,24 +134,3 @@ class ParticleSwarm:
         fitness_range = np.max([p.best_fitness for p in self.particles]) - np.min([p.best_fitness for p in self.particles])
         converged = np.all(position_range < self.tolerance) and fitness_range < self.tolerance
         return converged
-
-
-
-# def draw_frame(particles, objective_func):
-#     num_dimensions = 2
-#     # Default bounds
-#     lb = [-5.12, -5.12]
-#     ub = [5.12, 5.12]
-#     minimize = True
-#     fig = plt.figure(figsize=(20, 9))
-#     ax = fig.add_subplot(121, projection='3d')
-#     plot_3d_function(ax, objective_func, lb, ub)
-#     positions = np.array([p.position for p in particles])
-#     z = np.array([p.evaluate(objective_func, minimize) for p in particles])
-#     ax.scatter(positions[:, 0], positions[:, 1], z, color='magenta', s=35, label='positions')
-#     ax.legend()
-#     plt.tight_layout()
-#     plt.show(block=False)
-#     plt.pause(0.1)  # 100 milliseconds
-#     plt.close(fig)
-       
