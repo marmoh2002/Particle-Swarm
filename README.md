@@ -18,7 +18,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 ## Usage
 
-1. Run `plotted_pso.py` to visualize the PSO algorithm on a chosen benchmark function:
+1. Run `plotted_pso.py` to plot the PSO algorithm on a chosen benchmark function:
    ```
    python plotted_pso.py
    ```
