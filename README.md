@@ -27,6 +27,12 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
    ```
    python check_implementation.py
    ```
+
+2. Run `animate.py` to visualize the PSO algorithm on a chosen benchmark function:
+   ```
+   python animate.py
+   ```
+
 ## List of Benchmark Functions Supported
 1. ackley
 2. beale
