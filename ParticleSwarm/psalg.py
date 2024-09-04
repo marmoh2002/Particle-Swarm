@@ -75,14 +75,13 @@ class ParticleSwarm:
         # self.c2_start = self.options.get('SocialAdjustmentWeightStart', 0.5)
         # self.c2_end = self.options.get('SocialAdjustmentWeightEnd', 2.5)
         self.particles = [Particle(self.lb, self.ub, self.num_dimensions, self.minimize) for _ in range(self.swarm_size)]
-        
         self.global_best_position = np.random.uniform(self.lb, self.ub, self.num_dimensions)
         self.global_best_fitness = float('inf') if self.minimize else float('-inf')
         self.vmax = 0.08 * (self.ub - self.lb)
         self.tolerance = self.options.get('Tolerance', 1e-6)
     
     def send_to_animate(self, iterat, path):
-        draw_frame(self.particles, self.objective_func, run_num = iterat, path = path)
+        draw_frame(self.particles, self.global_best_fitness,self.global_best_position , self.objective_func, run_num = iterat, path = path)
     
     def optimize(self, verbose=True,path = None):
         if verbose:

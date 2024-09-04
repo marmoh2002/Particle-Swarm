@@ -8,7 +8,7 @@ import glob
 import platform
 import subprocess
 
-def draw_frame(particles, objective_func, run_num, path):
+def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
     num_dimensions = 2
     # Default bounds
     lb = [-5.12, -5.12]
@@ -19,7 +19,10 @@ def draw_frame(particles, objective_func, run_num, path):
     plot_3d_function(ax, objective_func, lb, ub)
     positions = np.array([p.position for p in particles])
     z = np.array([p.evaluate(objective_func, minimize) for p in particles])
-    ax.scatter(positions[:, 0], positions[:, 1], z, color='red', s=45, label='particles')
+    ax.scatter(positions[:, 0], positions[:, 1], z, color='red', s=20)
+    ax.scatter(best_pos[0], best_pos[1], g_best_fit, color='black', s=45, label=f'best fitness {g_best_fit:0.4f}')
+
+    # Add a text label for the global best fitness
     ax.legend()
     ax.set_title(f"Run number {run_num}")
     plt.tight_layout()
@@ -33,7 +36,7 @@ def draw_frame(particles, objective_func, run_num, path):
                     os.unlink(file_path)
         else:
             os.makedirs(path)
-    plt.savefig(f'pso_figures/{run_num}.png')
+    plt.savefig(f'ParticleSwarm/pso_figures/{run_num}.png')
     plt.close(fig)
        
 def create_gif_from_images(objective_func, optimization_type, folder_path, duration=5):
@@ -46,7 +49,10 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     """
     # Get list of PNG files in the folder, sorted by name
     images = sorted(glob.glob(f"{folder_path}/*.png"), key=lambda x: int(os.path.splitext(os.path.basename(x))[0]))
-    output_filename = f"{objective_func.__name__}_{optimization_type}.gif"
+    folder_name = "ParticleSwarm/Animated"
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    output_filename = f"ParticleSwarm/Animated/{objective_func.__name__}_{optimization_type}.gif"
     # Read in all the images
     image_list = []
     for filename in images:
@@ -60,7 +66,7 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     imageio.mimsave(output_filename, image_list, duration=duration, loop=0)  # loop=0 makes it repeat indefinitely
     print(f"Repeating GIF created successfully: {output_filename}")
 
-    gif_path = 'output_filename.gif'
+    gif_path = f"{objective_func.__name__}_{optimization_type}.gif"
     
     if os.path.exists(gif_path):
         if platform.system() == 'Darwin':  # macOS
