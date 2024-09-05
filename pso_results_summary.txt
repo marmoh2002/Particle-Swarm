@@ -1,0 +1,38 @@
+PSO Results Summary
+Number of runs: 10
+Number of dimensions: 2
+Number of particles: 50
+Number of iterations: 600
+Tolerance: 1e-06
+Optimization type: minimization
+Bounds: [-10, 10]
+
+  Function Name  | Mean Optimal Value | Standard Deviation  | Average Time (s)
+---------------------------------------------------------------------------
+ackley           | 0.000000           | 0.000000            | 0.2405
+beale            | 0.000000           | 0.000000            | 0.2273
+booth            | 0.000000           | 0.000000            | 0.1631
+bukin            | 0.102371           | 0.045467            | 1.3798
+cross_in_tray    | -2.062612          | 0.000000            | 0.3194
+drop_wave        | -0.993625          | 0.019126            | 0.3477
+easom            | -1.000000          | 0.000000            | 0.1834
+eggholder        | -62.432712         | 0.000000            | 0.1953
+goldstein_price  | 3.000000           | 0.000000            | 0.1757
+griewank         | 0.001479           | 0.002958            | 1.5037
+himmelblau       | 0.000000           | 0.000000            | 0.9044
+holder_table     | -18.238120         | 2.911148            | 2.5561
+langermann       | -4.144668          | 0.018363            | 1.0142
+levy             | 0.000000           | 0.000000            | 0.3830
+matyas           | 0.000000           | 0.000000            | 0.1758
+mccormick        | -7.953237          | 1.629872            | 0.1821
+michalewicz      | -1.856648          | 0.126482            | 1.8994
+rastrigin        | 0.397984           | 0.487428            | 0.2920
+rosenbrock       | 0.000000           | 0.000000            | 0.2891
+schaffer_n2      | 0.000000           | 0.000000            | 0.2800
+schaffer_n4      | 0.292579           | 0.000000            | 1.5601
+schwefel         | 830.075197         | 0.000000            | 0.2250
+shubert          | -186.730909        | 0.000000            | 2.1398
+sphere           | 0.000000           | 0.000000            | 0.2397
+styblinski_tang  | -78.332331         | 0.000000            | 0.3046
+three_hump_camel | 0.000000           | 0.000000            | 0.1869
+trid             | -2.000000          | 0.000000            | 0.2445

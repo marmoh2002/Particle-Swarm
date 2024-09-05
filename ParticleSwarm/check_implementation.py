@@ -105,7 +105,7 @@ def main():
     for i, func_name in enumerate(all_functions, 1):
                     list_of_functions.append(str(i)+". "+str(func_name))
     list_of_functions.append("0. Back to main menu")
-
+    _verbose = False
     print("-----------------------------------------------------------------------------------------")
     while True:
         print_list(list_of_options_1)
@@ -114,7 +114,7 @@ def main():
             print("Exiting program.")
             break
         elif choice == '1':
-            v = input("Do you want to see PSO in action? ([y] = yes/n = no): ").lower()
+            v = input("Do you want to see PSO in action? ([y]/n): ").lower()
             if  v == 'y':
                 _verbose = True
             while choice == '1':
@@ -172,7 +172,7 @@ def main():
                 f.write(f"Tolerance: {tolerance}\n")
                 f.write(f"Optimization type: {'minimization' if minimized else 'maximization'}\n")
                 f.write(f"Bounds: [{lb[0]}, {ub[0]}]\n\n")
-                f.write("Function Name | Mean Optimal Value | Standard Deviation | Average Time (s)\n")
+                f.write("  Function Name  | Mean Optimal Value | Standard Deviation  | Average Time (s)\n")
                 f.write("-" * 75 + "\n")
             
             for func_name, result in results.items():
@@ -184,7 +184,7 @@ def main():
                 
                 # Append to the summary file
                 with open(summary_file, 'a') as f:
-                    f.write(f"{func_name:<14} | {result['mean']:<18.6f} | {result['std']:<19.6f} | {result['time_avg']:0.4f}\n")
+                    f.write(f"{func_name:<16} | {result['mean']:<18.6f} | {result['std']:<19.6f} | {result['time_avg']:0.4f}\n")
             
             print(f"\nResults summary has been saved to '{summary_file}'")
             
