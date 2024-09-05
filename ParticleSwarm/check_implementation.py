@@ -100,7 +100,7 @@ def main():
     all_functions = [func for func in dir(funcs) if callable(getattr(funcs, func)) and not func.startswith("_") and not func.startswith("parse_user_function")]
     list_of_functions = []
     list_of_options_1 = ["Available options:", "1. Run PSO on a single function", "2. Run PSO on all functions", "0. Quit"]
-    list_of_options_2 = ["What would you like to do next?\n", "1. Available benchmark functions:", "0. Exit"]
+    list_of_options_2 = ["What would you like to do next?", "  1. Available benchmark functions", "  0. Exit"]
     list_of_functions.append("Available benchmark functions:\n")  
     for i, func_name in enumerate(all_functions, 1):
                     list_of_functions.append(str(i)+". "+str(func_name))
