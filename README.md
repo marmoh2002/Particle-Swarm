@@ -32,7 +32,7 @@ This animation demonstrates how the particles converge towards the global maximu
 ### 1. PSO algorithm minimizing the Trid benchmark function:
 
 <p align="center">
-  <img src="ParticleSwarm\SamplePlots\SampleFigure_sphere.png" alt="PSO minimizing Trid benchmark function" width="720" height="400">
+  <img src="ParticleSwarm\SamplePlots\SampleFigure_trid.png" alt="PSO minimizing Trid benchmark function" width="720" height="400">
 </p>
 
 This plot demonstrates how the particles converge towards the global minimum of the Trid function.
@@ -43,7 +43,13 @@ This plot demonstrates how the particles converge towards the global minimum of 
 <img src="ParticleSwarm\SamplePlots\SampleFigure_sphere.png" alt="PSO minimizing Sphere benchmark function" width="720" height="400">
 </p>
 
-This plot demonstrates how the particles converge towards the global minimum of the Sphere function.
+### 3. PSO algorithm maximizing the Easom benchmark function:
+
+<p align="center">
+<img src="ParticleSwarm\SamplePlots\SampleFigure_easom.png" alt="PSO minimizing Easom benchmark function" width="720" height="400">
+</p>
+
+This plot demonstrates how the particles converge towards the global minimum of the Easom function.
 
 ## Folders
 1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
