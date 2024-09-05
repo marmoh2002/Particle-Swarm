@@ -30,15 +30,15 @@ Run `PROGRAM.py` to start the program:
 
 ## Sample Visualization
 
-# 1. Here's a sample GIF showing the PSO algorithm minimizing the Matyas benchmark function:
+# 1. PSO algorithm minimizing the Matyas benchmark function:
 
-![PSO minimizing Matyas benchmark function](ParticleSwarm/Animated/matyas_minimization.gif)
+<img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="400" height="300">
 
 This animation demonstrates how the particles converge towards the global minimum of the Matyas function over multiple iterations.
 
-# 2. Here's a sample GIF showing the PSO algorithm maximizing the Levy benchmark function:
+# 2. PSO algorithm maximizing the Levy benchmark function:
 
-![PSO maximizing Levy benchmark function](ParticleSwarm/Animated/levy_maximization.gif)
+<img src="ParticleSwarm/Animated/levy_maximization.gif" alt="PSO maximizing Levy benchmark function" width="400" height="300">
 
 This animation demonstrates how the particles converge towards the global maximum of the Levy function over multiple iterations.
 
