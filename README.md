@@ -17,15 +17,11 @@ Run `PROGRAM.py` to start the program:
   <img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="600" height="400">
 </p>
 
-This animation demonstrates how the particles converge towards the global minimum of the Matyas function over multiple iterations.
-
 ### 2. PSO algorithm maximizing the Levy benchmark function:
 
 <p align="center">
 <img src="ParticleSwarm/Animated/levy_maximization.gif" alt="PSO maximizing Levy benchmark function" width="600" height="400">
 </p>
-
-This animation demonstrates how the particles converge towards the global maximum of the Levy function over multiple iterations.
 
 ## Sample Plot
 
@@ -34,8 +30,6 @@ This animation demonstrates how the particles converge towards the global maximu
 <p align="center">
   <img src="ParticleSwarm\SamplePlots\SampleFigure_trid.png" alt="PSO minimizing Trid benchmark function" width="720" height="400">
 </p>
-
-This plot demonstrates how the particles converge towards the global minimum of the Trid function.
 
 ### 2. PSO algorithm maximizing the Sphere benchmark function:
 
@@ -48,8 +42,6 @@ This plot demonstrates how the particles converge towards the global minimum of 
 <p align="center">
 <img src="ParticleSwarm\SamplePlots\SampleFigure_easom.png" alt="PSO minimizing Easom benchmark function" width="720" height="400">
 </p>
-
-This plot demonstrates how the particles converge towards the global minimum of the Easom function.
 
 ## List of Benchmark Functions Supported
 1. ackley
