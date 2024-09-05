@@ -72,6 +72,13 @@ def visualize_pso_3d(objective_func, is_user_defined=False):
     ax2.scatter(best_position[0], best_position[1], best_z, 
                 color='blue', s=100, label='Best position')
     ax2.legend()
+    
+    # Add text annotation for best position and fitness
+    best_pos_text = f"Best Position: ({best_position[0]:.4f}, {best_position[1]:.4f})"
+    best_fitness_text = f"Best Fitness: {best_fitness:.4f}"
+    ax2.text2D(0.05, 0.95, best_pos_text, transform=ax2.transAxes)
+    ax2.text2D(0.05, 0.90, best_fitness_text, transform=ax2.transAxes)
+    
     plt.tight_layout()
     plt.show()
     
