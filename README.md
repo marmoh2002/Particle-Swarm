@@ -69,7 +69,7 @@ This plot demonstrates how the particles converge towards the global minimum of 
 
 7. `animate.py`: Creates animated visualizations of the PSO process, allowing users to choose benchmark functions or input custom functions for optimization.
 
-### List of Benchmark Functions Supported
+## List of Benchmark Functions Supported
 1. ackley
 2. beale
 3. booth
