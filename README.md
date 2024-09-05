@@ -34,13 +34,17 @@ Run `PROGRAM.py` to start the program:
 
 # 1. PSO algorithm minimizing the Matyas benchmark function:
 
-<img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="600" height="400">
+<p align="center">
+  <img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="600" height="400">
+</p>
 
 This animation demonstrates how the particles converge towards the global minimum of the Matyas function over multiple iterations.
 
 # 2. PSO algorithm maximizing the Levy benchmark function:
 
+<p align="center">
 <img src="ParticleSwarm/Animated/levy_maximization.gif" alt="PSO maximizing Levy benchmark function" width="600" height="400">
+</p>
 
 This animation demonstrates how the particles converge towards the global maximum of the Levy function over multiple iterations.
 
