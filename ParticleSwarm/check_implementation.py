@@ -20,7 +20,13 @@ def run_pso_multiple_times(num_runs=default_num_runs, num_dimensions=default_num
             print(f"___________________Run [{i+1}]:_______________________{num_runs-i} runs left_")
         try:
             pso = ParticleSwarm(function, lb, ub, num_dimensions, options={'SwarmSize': swarm_size, 'MaxIterations': max_iterations, 'Tolerance': tolerance},minimize = minimized)
-            _, best_fitness, elapsed_time , iterations_performed = pso.optimize(verbose)
+            result = pso.optimize(verbose)
+            if len(result) == 4:
+                _, best_fitness, elapsed_time, iterations_performed = result
+            elif len(result) == 3:
+                best_fitness, elapsed_time, iterations_performed = result
+            else:
+                raise ValueError(f"Unexpected number of return values from optimize: {len(result)}")
             optimal_values.append(best_fitness)
             elapsed_times.append(elapsed_time)
             if verbose:
