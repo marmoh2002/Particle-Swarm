@@ -43,7 +43,8 @@ class Particle:
         return fitness
 
 class ParticleSwarm:
-    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True, isanimated: bool = False):
+    def __init__(self, objective_func, lb, ub, num_dimensions: int, options: dict = None, minimize=True, isanimated: bool = False, is_user_defined = False):
+        self.is_user_defined = is_user_defined
         self.objective_func = objective_func
         self.lb = np.array(lb)
         self.ub = np.array(ub)
@@ -81,7 +82,7 @@ class ParticleSwarm:
         self.tolerance = self.options.get('Tolerance', 1e-6)
     
     def send_to_animate(self, iterat, path):
-        draw_frame(self.particles, self.global_best_fitness,self.global_best_position , self.objective_func, run_num = iterat, path = path)
+        draw_frame(self.particles, self.global_best_fitness,self.global_best_position , self.objective_func, run_num = iterat, path = path, is_user_defined=self.is_user_defined)
     
     def optimize(self, verbose=True,path = None):
         if verbose:

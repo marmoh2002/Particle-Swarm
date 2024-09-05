@@ -8,7 +8,7 @@ from plotted_pso import enumerate_functions
 from drw import create_gif_from_images
 
 
-def start_anim(objective_func):
+def start_anim(objective_func, is_user_defined = False):
     path = 'ParticleSwarm/pso_figures'
     num_dimensions = 2
     num_particles = 30
@@ -41,10 +41,10 @@ def start_anim(objective_func):
     else:
         print("Invalid choice, using default value instead")
     del setting
-    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations, 'Tolerance':tolerance}, minimize= isMinimized, isanimated=True)
+    pso = ParticleSwarm(objective_func, lb, ub, num_dimensions, options={'SwarmSize': num_particles, 'MaxIterations': max_iterations, 'Tolerance':tolerance}, minimize= isMinimized, isanimated=True, is_user_defined=is_user_defined)
     pso.optimize(path = path)
     print("Creating your GIF")
-    create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path)
+    create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path, is_user_defined=is_user_defined)
 
 if __name__ == "__main__":
     available_functions = enumerate_functions("funcs", _verbose = False)
@@ -67,10 +67,9 @@ if __name__ == "__main__":
                 print(f"Visualizing {func_name} function...")
                 start_anim(objective_func)
             elif index == len(available_functions):
-                user_func_str = input("Function: ")
-                user_func = parse_user_function(user_func_str)
+                user_func = parse_user_function()
                 if user_func:
-                    start_anim(user_func)
+                    start_anim(user_func, is_user_defined = True)
             else:
                 print("Invalid input. Please choose a number from the list.")
                 continue

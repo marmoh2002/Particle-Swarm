@@ -9,7 +9,7 @@ import platform
 import subprocess
 import shutil
 
-def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
+def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path, is_user_defined = False):
     num_dimensions = 2
     # Default bounds
     lb = [-5.12, -5.12]
@@ -35,12 +35,14 @@ def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path):
                     os.unlink(file_path)
         else:
             os.makedirs(path)
-    ax.set_title(f'\nVisualization of PSO on {objective_func.__name__.capitalize()} Function\nrun no. {run_num}')
-       
+    if is_user_defined:
+        ax.set_title(f'\nVisualization of PSO on user-defined function\niteration no. {run_num}')
+    else:
+        ax.set_title(f'\nVisualization of PSO on {objective_func.__name__.capitalize()} Function\niteration no. {run_num}')   
     plt.savefig(f'ParticleSwarm/pso_figures/{run_num}.png')
     plt.close(fig)
        
-def create_gif_from_images(objective_func, optimization_type, folder_path, duration=5):
+def create_gif_from_images(objective_func, optimization_type, folder_path, duration=5,is_user_defined = False):
     """
     Create a repeating GIF from a folder of images
 
@@ -53,7 +55,11 @@ def create_gif_from_images(objective_func, optimization_type, folder_path, durat
     folder_name = os.path.join("ParticleSwarm", "Animated")
     if not os.path.exists(folder_name):
         os.makedirs(folder_name)
-    output_filename = os.path.join(folder_name, f"{objective_func.__name__}_{optimization_type}.gif")
+    output_filename = "temp.gif"
+    if not is_user_defined:
+        output_filename = os.path.join(folder_name, f"{objective_func.__name__}_{optimization_type}.gif")
+    else:
+        output_filename = os.path.join(folder_name, f"user_defined_function_{optimization_type}.gif")
     # Read in all the images
     image_list = []
     for filename in images:

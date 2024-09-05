@@ -157,10 +157,16 @@ def trid(x):
     product_part = np.sum(x[1:] * x[:-1])
     return sum_part - product_part
 
-def parse_user_function(func_str):
+def parse_user_function():
     """Parse user input string into a callable function."""
     print("Enter your custom function using 'x' as the input variable.")
     print("Example: np.sin(x[0]) + np.cos(x[1])")
+    print("More examples:")
+    print("1. x[0]**2 + x[1]**2  # Simple sphere function")
+    print("2. np.sum(x**2)  # Sphere function for any dimension")
+    print("3. 100 * (x[1] - x[0]**2)**2 + (1 - x[0])**2  # Rosenbrock function")
+    print("4. -20 * np.exp(-0.2 * np.sqrt(0.5 * (x[0]**2 + x[1]**2))) - np.exp(0.5 * (np.cos(2*np.pi*x[0]) + np.cos(2*np.pi*x[1]))) + 20 + np.e  # Ackley function")
+    func_str = input("\n___________________________\nFunction: ")
     try:
         return lambda x: eval(func_str, {"x": x, "np": np})
     except:

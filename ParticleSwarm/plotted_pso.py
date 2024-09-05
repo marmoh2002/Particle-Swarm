@@ -118,9 +118,8 @@ if __name__ == "__main__":
                 print(f"Visualizing {func_name} function...")
                 visualize_pso_3d(objective_func)
             elif index == len(available_functions):
-                user_func_str = input("Function: ")
                 user_function = getattr(importlib.import_module("funcs"), "parse_user_function")
-                user_func = user_function(user_func_str)
+                user_func = user_function()
                 if user_func:
                     print("Visualizing user-defined function...")
                     visualize_pso_3d(user_func, is_user_defined=True)
