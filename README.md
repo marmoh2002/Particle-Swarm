@@ -51,24 +51,6 @@ This plot demonstrates how the particles converge towards the global minimum of 
 
 This plot demonstrates how the particles converge towards the global minimum of the Easom function.
 
-## Folders
-1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
-
-## Files
-1. `PROGRAM.py`: The main menu of the program.
-
-2. `psalg.py`: Core implementation of the PSO algorithm.
-
-3. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
-
-4. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
-
-5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
-
-6. `drw.py`: Contains functions for visualizing the Particle Swarm Optimization (PSO) process and creating animated GIFs of the optimization.
-
-7. `animate.py`: Creates animated visualizations of the PSO process, allowing users to choose benchmark functions or input custom functions for optimization.
-
 ## List of Benchmark Functions Supported
 1. ackley
 2. beale
@@ -98,6 +80,24 @@ This plot demonstrates how the particles converge towards the global minimum of 
 26. three_hump_camel
 27. trid
 28. Input custom function
+
+## Folders
+1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
+
+## Files
+1. `PROGRAM.py`: The main menu of the program.
+
+2. `psalg.py`: Core implementation of the PSO algorithm.
+
+3. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
+
+4. `check_implementation.py`: Evaluates the algorithm's performance by running it for a specific number of iterations. Calculates mean and standard deviation of results.
+
+5. `plotted_pso.py`: Visualizes the benchmark function with swarm particles superimposed, showing the state before and after running the algorithm.
+
+6. `drw.py`: Contains functions for visualizing the Particle Swarm Optimization (PSO) process and creating animated GIFs of the optimization.
+
+7. `animate.py`: Creates animated visualizations of the PSO process, allowing users to choose benchmark functions or input custom functions for optimization.
 
 ## Requirements
 
