@@ -6,8 +6,9 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
 
 ## Files
+1. `PROGRAM.py`: The main menu of the program.
 
-1. `psalg.py`: Core implementation of the PSO algorithm.
+2. `psalg.py`: Core implementation of the PSO algorithm.
 
 3. `funcs.py`: Contains 27 benchmark functions used for testing the PSO algorithm, as well as a custom function parser.
 
@@ -21,20 +22,11 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 ## Usage
 
-1. Run `plotted_pso.py` to plot the PSO algorithm on a chosen benchmark function:
+Run `PROGRAM.py` to start the program:
    ```
-   python plotted_pso.py
-   ```
-
-2. Use `check_implementation.py` to evaluate the algorithm's performance:
-   ```
-   python check_implementation.py
+   python PROGRAM.py
    ```
 
-3. Run `animate.py` to visualize the PSO algorithm on a chosen benchmark function:
-   ```
-   python animate.py
-   ```
 
 ## List of Benchmark Functions Supported
 1. ackley
