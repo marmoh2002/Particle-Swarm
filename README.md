@@ -31,13 +31,13 @@ Run `PROGRAM.py` to start the program:
   <img src="ParticleSwarm\SamplePlots\SampleFigure_trid.png" alt="PSO minimizing Trid benchmark function" width="720" height="400">
 </p>
 
-### 2. PSO algorithm maximizing the Sphere benchmark function:
+### 2. PSO algorithm minimizing the Sphere benchmark function:
 
 <p align="center">
 <img src="ParticleSwarm\SamplePlots\SampleFigure_sphere.png" alt="PSO minimizing Sphere benchmark function" width="720" height="400">
 </p>
 
-### 3. PSO algorithm maximizing the Easom benchmark function:
+### 3. PSO algorithm minimizing the Easom benchmark function:
 
 <p align="center">
 <img src="ParticleSwarm\SamplePlots\SampleFigure_easom.png" alt="PSO minimizing Easom benchmark function" width="720" height="400">
