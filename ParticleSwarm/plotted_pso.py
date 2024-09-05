@@ -97,7 +97,7 @@ def enumerate_functions(filename, _verbose = True):
     return available_functions
 
 # Update the available_functions in the main block
-if __name__ == "__main__":
+def main():
     available_functions = enumerate_functions("funcs", _verbose = False)
     while True:
         print("\nAvailable functions:")

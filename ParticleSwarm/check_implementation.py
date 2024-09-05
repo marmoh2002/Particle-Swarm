@@ -58,8 +58,7 @@ def run_all_functions(all_functions, num_runs=default_num_runs, num_dimensions=d
         results[func_name] = {"mean": mean, "std": std, "time_avg": time_avg}
     return results
 
-if __name__ == "__main__":
-
+def main():
     # Get user input or use default values
     num_runs = int(input(f"Enter number of runs (default {default_num_runs}): ") or default_num_runs)
     num_dimensions = int(input(f"Enter number of dimensions (default {default_num_dimensions}): ") or default_num_dimensions)

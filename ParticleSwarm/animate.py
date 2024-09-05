@@ -46,7 +46,7 @@ def start_anim(objective_func, is_user_defined = False):
     print("Creating your GIF")
     create_gif_from_images(objective_func=objective_func, optimization_type=optimization_type, folder_path  = path, is_user_defined=is_user_defined)
 
-if __name__ == "__main__":
+def main():
     available_functions = enumerate_functions("funcs", _verbose = False)
     
     while True:
