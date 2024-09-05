@@ -161,11 +161,48 @@ if __name__ == "__main__":
             results = run_all_functions(all_functions, num_runs, num_dimensions, lb, ub, swarm_size, max_iterations, _verbose, minimized=minimized)
             print("-----------------------------------------FINAL_RESULTS------------------------------------------------")
             print("\nFinal Results:")
+            
+            # Create and write to the summary file
+            summary_file = 'pso_results_summary.txt'
+            with open(summary_file, 'w') as f:
+                f.write(f"PSO Results Summary\n")
+                f.write(f"Number of runs: {num_runs}\n")
+                f.write(f"Number of dimensions: {num_dimensions}\n")
+                f.write(f"Number of particles: {swarm_size}\n")
+                f.write(f"Number of iterations: {max_iterations}\n")
+                f.write(f"Tolerance: {tolerance}\n")
+                f.write(f"Optimization type: {'minimization' if minimized else 'maximization'}\n")
+                f.write(f"Bounds: [{lb[0]}, {ub[0]}]\n\n")
+                f.write("Function Name | Mean Optimal Value | Standard Deviation | Average Time (s)\n")
+                f.write("-" * 75 + "\n")
+            
             for func_name, result in results.items():
                 print(f"{func_name}:")
                 print(f"  Mean optimal value: {result['mean']}")
                 print(f"  Standard deviation of optimal values: {result['std']}")
                 print(f"  Average time per run: {result['time_avg']:0.4f} seconds")
                 print("----------------------------------------------------------------------------------------")
+                
+                # Append to the summary file
+                with open(summary_file, 'a') as f:
+                    f.write(f"{func_name:<14} | {result['mean']:<18.6f} | {result['std']:<19.6f} | {result['time_avg']:0.4f}\n")
+            
+            print(f"\nResults summary has been saved to '{summary_file}'")
+            
+            # Open the file after creation
+            import os
+            import subprocess
+            
+            try:
+                if os.name == 'nt':  # For Windows
+                    os.startfile(summary_file)
+                elif os.name == 'posix':  # For macOS and Linux
+                    opener = 'open' if sys.platform == 'darwin' else 'xdg-open'
+                    subprocess.call([opener, summary_file])
+                print(f"The file '{summary_file}' has been opened.")
+            except Exception as e:
+                print(f"An error occurred while trying to open the file: {e}")
+                print(f"Please open '{summary_file}' manually to view the results.")
+
         else:
             print("Invalid choice. Please enter 0, 1, or 2.")
