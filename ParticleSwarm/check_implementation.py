@@ -1,7 +1,11 @@
 import numpy as np
 from psalg import ParticleSwarm 
-import funcs as funcs
-
+import funcs
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from plotted_pso import plot_3d_function
+import os
+import subprocess
 # Default values
 default_num_runs = 10
 default_num_dimensions = 2
@@ -14,33 +18,37 @@ minimized = True
 def run_pso_multiple_times(num_runs=default_num_runs, num_dimensions=default_num_dimensions, lb=[-10] * default_num_dimensions, ub=[10] * default_num_dimensions, function=funcs.sphere, swarm_size = default_num_particles, max_iterations = default_num_iterations, verbose = False,minimized = True, tolerance = default_tolerance):
     optimal_values = []
     elapsed_times = []
-
+    optimal_positions = []
     for i in range(num_runs):
         if verbose:
-            print(f"___________________Run [{i+1}]:_______________________{num_runs-i} runs left_")
+            print(f"___________________Run [{i+1}]:_______________________[{num_runs-i} runs left]")
         try:
             pso = ParticleSwarm(function, lb, ub, num_dimensions, options={'SwarmSize': swarm_size, 'MaxIterations': max_iterations, 'Tolerance': tolerance},minimize = minimized)
             result = pso.optimize(verbose)
             if len(result) == 4:
-                _, best_fitness, elapsed_time, iterations_performed = result
+                best_pos, best_fitness, elapsed_time, iterations_performed = result
             elif len(result) == 3:
                 best_fitness, elapsed_time, iterations_performed = result
             else:
                 raise ValueError(f"Unexpected number of return values from optimize: {len(result)}")
+            optimal_positions.append(best_pos)
             optimal_values.append(best_fitness)
             elapsed_times.append(elapsed_time)
             if verbose:
-                print(f"Best fitness = {best_fitness}")
+                print(f"Best fitness = {best_fitness} at ({best_pos[0]:.4f}, {best_pos[1]:.4f})")
         except Exception as e:
             print(f"------------------Error: {str(e)}--------------------")
             exit()
-    try:    
+    try:
+        optimal_positions =  np.array(optimal_positions)    
         optimal_values = np.array(optimal_values)
         elapsed_times = np.array(elapsed_times)
         mean_optimal = np.mean(optimal_values)
         std_optimal = np.std(optimal_values)
         time_avg = np.mean(elapsed_times)
-        return mean_optimal, std_optimal, time_avg
+        best_pos_mean = tuple(np.mean(optimal_positions, axis=0))  # Fixed this line
+        return mean_optimal, std_optimal, time_avg, optimal_positions, optimal_values, best_pos_mean
+    
     except Exception as e:
         print(f"------------------Error: {str(e)}--------------------")
         exit()
@@ -54,12 +62,12 @@ def run_all_functions(all_functions, num_runs=default_num_runs, num_dimensions=d
     for func_name in all_functions:
         func = getattr(funcs, func_name)
         print(f"\nRunning PSO on {func_name} function...")
-        mean, std , time_avg= run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func, swarm_size, max_iterations, verbose,minimized=minimized)
+        mean, std, time_avg,_,_,_= run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func, swarm_size, max_iterations, verbose,minimized=minimized)
         results[func_name] = {"mean": mean, "std": std, "time_avg": time_avg}
     return results
-
-def main():
+def _usr_input():
     # Get user input or use default values
+    _verbose= False
     num_runs = int(input(f"Enter number of runs (default {default_num_runs}): ") or default_num_runs)
     num_dimensions = int(input(f"Enter number of dimensions (default {default_num_dimensions}): ") or default_num_dimensions)
     lb = [-10] * num_dimensions  # Lower bound
@@ -85,6 +93,9 @@ def main():
         minimized = True
     else:
         minimized = False
+    v = input("Do you want to see PSO in action? (y/[n]): ").lower()
+    if  v == 'y':
+        _verbose = True   
     del minimized_input
     del use_default_params  
     print("-----------------------------------------SUMMARY-----------------------------------------")
@@ -96,11 +107,15 @@ def main():
     print(f"Optimization type: {'minimization' if minimized else 'maximization'}")
     print(f"Bounds: [{lb[0]}, {ub[0]}]")
     print(f"Tolerance: {tolerance}")
+    return num_runs, num_dimensions, lb, ub, swarm_size, max_iterations, tolerance, minimized, _verbose
+
+def main():
+
     # Get all functions from funcs module
     all_functions = [func for func in dir(funcs) if callable(getattr(funcs, func)) and not func.startswith("_") and not func.startswith("parse_user_function")]
     list_of_functions = []
     list_of_options_1 = ["Available options:", "1. Run PSO on a single function", "2. Run PSO on all functions", "0. Quit"]
-    list_of_options_2 = ["What would you like to do next?", "  1. Available benchmark functions", "  0. Exit"]
+    list_of_options_2 = ["What would you like to do next?", "  1. Previous Menu", "  0. Exit"]
     list_of_functions.append("Available benchmark functions:\n")  
     for i, func_name in enumerate(all_functions, 1):
                     list_of_functions.append(str(i)+". "+str(func_name))
@@ -114,9 +129,7 @@ def main():
             print("Exiting program.")
             break
         elif choice == '1':
-            v = input("Do you want to see PSO in action? ([y]/n): ").lower()
-            if  v == 'y':
-                _verbose = True
+            num_runs, num_dimensions, lb, ub, swarm_size, max_iterations, tolerance, minimized, _verbose = _usr_input()
             while choice == '1':
                 print_list(list_of_functions)
                 func_choice = input("\nChoose a function to run PSO on (enter number) or enter 0 to go back to main menu: ")
@@ -130,12 +143,23 @@ def main():
                         print("--------------------------------------------")
                         print(f"Running PSO on {func_name} function...")
                         print("--------------------------------------------")
-                        mean, std, avg_time = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func, swarm_size, max_iterations, _verbose)
+                        mean, std, avg_time, best_positions, best_values, best_pos_mean = run_pso_multiple_times(num_runs, num_dimensions, lb, ub, func, swarm_size, max_iterations, _verbose)
                         print("_________\nResults:\n_________")
                         print(f"  Mean optimal value: {mean}")
                         print(f"  Standard deviation of optimal values: {std}")
                         print(f"  Average time per run: {avg_time: 0.4f} seconds")
                         print("----------------------------------------------------------------------------------------------")
+                        fig = plt.figure(figsize=(10, 9))
+                        ax = fig.add_subplot(111, projection='3d')
+                        plot_3d_function(ax, func, lb, ub)
+                        ax.scatter(best_positions[:, 0], best_positions[:, 1], best_values, color='red', s=20,label='Best position')
+                        ax.text2D(0.00, 0.95, f"Mean optimal value: {mean}", transform=ax.transAxes)
+                        ax.text2D(0.00, 0.90, f"Mean optimal position: ({best_pos_mean[0]:.4f}, {best_pos_mean[1]:.4f})", transform=ax.transAxes)
+                        ax.text2D(0.00, 0.85, f"Standard deviation of optimal values: {std}", transform=ax.transAxes)
+                        ax.text2D(0.00, 0.80, f"Average time per run: {avg_time: 0.4f} seconds", transform=ax.transAxes)
+                        ax.legend()
+                        plt.tight_layout()
+                        plt.show()
                         while True:
                             print_list(list_of_options_2)
                             choice = input("Enter your choice: ")
@@ -153,9 +177,7 @@ def main():
                 except ValueError:
                     print("Invalid input. Please enter a number.") 
         elif choice == '2':
-            v = input("Do you want to see PSO in action? ([y] = yes/n = no): ").lower()
-            if  v == 'y':
-                _verbose = True
+            num_runs, num_dimensions, lb, ub, swarm_size, max_iterations, tolerance, minimized, _verbose = _usr_input()
             print("\nRunning PSO on all functions...")
             results = run_all_functions(all_functions, num_runs, num_dimensions, lb, ub, swarm_size, max_iterations, _verbose, minimized=minimized)
             print("-----------------------------------------FINAL_RESULTS------------------------------------------------")
@@ -189,9 +211,6 @@ def main():
             print(f"\nResults summary has been saved to '{summary_file}'")
             
             # Open the file after creation
-            import os
-            import subprocess
-            
             try:
                 if os.name == 'nt':  # For Windows
                     os.startfile(summary_file)

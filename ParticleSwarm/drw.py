@@ -25,7 +25,6 @@ def draw_frame(particles, g_best_fit, best_pos , objective_func, run_num, path, 
     # Add a text label for the global best fitness
     ax.legend()
     plt.tight_layout()
-    # plt.show(block=False)
     print(f"loading gif... {run_num}")
     if run_num == 1:
         if os.path.exists(path):
