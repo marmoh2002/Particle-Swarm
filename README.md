@@ -1,6 +1,31 @@
 # Particle Swarm Optimization (PSO) Implementation
 
-This project implements and visualizes the Particle Swarm Optimization algorithm for various benchmark functions.
+This project implements and visualizes the Particle Swarm Optimization algorithm as well as the Grey Wolf Optimization algorithm for various benchmark functions.
+
+## Usage
+
+Run `PROGRAM.py` to start the program:
+   ```
+   python PROGRAM.py
+   ```
+
+## Sample Visualization
+
+### 1. PSO algorithm minimizing the Matyas benchmark function:
+
+<p align="center">
+  <img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="600" height="400">
+</p>
+
+This animation demonstrates how the particles converge towards the global minimum of the Matyas function over multiple iterations.
+
+# 2. PSO algorithm maximizing the Levy benchmark function:
+
+<p align="center">
+<img src="ParticleSwarm/Animated/levy_maximization.gif" alt="PSO maximizing Levy benchmark function" width="600" height="400">
+</p>
+
+This animation demonstrates how the particles converge towards the global maximum of the Levy function over multiple iterations.
 
 ## Folders
 1. `Animated`: Contains some previously made PSO visualization GIFs of famous benchmark functions
@@ -20,35 +45,7 @@ This project implements and visualizes the Particle Swarm Optimization algorithm
 
 7. `animate.py`: Creates animated visualizations of the PSO process, allowing users to choose benchmark functions or input custom functions for optimization.
 
-## Usage
-
-Run `PROGRAM.py` to start the program:
-   ```
-   python PROGRAM.py
-   ```
-
-
-## Sample Visualization
-
-
-
-# 1. PSO algorithm minimizing the Matyas benchmark function:
-
-<p align="center">
-  <img src="ParticleSwarm/Animated/matyas_minimization.gif" alt="PSO minimizing Matyas benchmark function" width="600" height="400">
-</p>
-
-This animation demonstrates how the particles converge towards the global minimum of the Matyas function over multiple iterations.
-
-# 2. PSO algorithm maximizing the Levy benchmark function:
-
-<p align="center">
-<img src="ParticleSwarm/Animated/levy_maximization.gif" alt="PSO maximizing Levy benchmark function" width="600" height="400">
-</p>
-
-This animation demonstrates how the particles converge towards the global maximum of the Levy function over multiple iterations.
-
-## List of Benchmark Functions Supported
+### List of Benchmark Functions Supported
 1. ackley
 2. beale
 3. booth
